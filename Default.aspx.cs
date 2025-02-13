@@ -11,7 +11,15 @@ namespace ATS_friendly_Resume_Maker
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            lblWelcome.Text = "Welcome, " + Session["UserFirstName"].ToString() + " " + Session["UserLastName"].ToString();
 
+            String str = Session["UserFirstName"].ToString() +" "+ Session["UserLastName"].ToString();
+            TextBox1.Text = str;
+        }
+
+        protected void TextBox1_TextChanged(object sender, EventArgs e)
+        {
+            
         }
     }
 }
