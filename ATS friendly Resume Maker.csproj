@@ -175,6 +175,13 @@
     <Content Include="Default.aspx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Header.Master.cs">
+      <DependentUpon>Header.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Header.Master.designer.cs">
+      <DependentUpon>Header.Master</DependentUpon>
+    </Compile>
     <Compile Include="Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -228,6 +235,7 @@
     <Content Include="assets\vendor\bootstrap\js\bootstrap.min.js.map" />
     <Content Include="assets\vendor\purecounter\purecounter_vanilla.js.map" />
     <Content Include="assets\vendor\swiper\swiper-bundle.min.js.map" />
+    <Content Include="Header.Master" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
