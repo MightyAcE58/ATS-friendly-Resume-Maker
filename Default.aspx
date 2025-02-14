@@ -44,7 +44,7 @@
             <nav id="navmenu" class="navmenu">
                 <ul>
                     <li><a href="#hero" class="active">Home</a></li>
-                    <li><a href="#about">About</a></li>
+                    <li><a href="#about" >About</a></li>
                     <li><a href="#features">Features</a></li>
                     <li><a href="#team">Team</a></li>
                     <li><a href="Login.aspx">Login</a></li>
@@ -457,6 +457,77 @@
                 });
             });
         });
+    </script>
+    <!-- navbar script-->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Cache the navigation links and sections
+            const navLinks = document.querySelectorAll("#navmenu ul li a");
+            const sections = document.querySelectorAll("section");
+
+            // Function to update active class based on the clicked item
+            navLinks.forEach((link) => {
+                link.addEventListener("click", function (e) {
+                    e.preventDefault(); // Prevent default behavior (scrolling to section directly)
+
+                    // Remove active class from all links
+                    navLinks.forEach((item) => item.classList.remove("active"));
+
+                    // Add active class to the clicked link
+                    this.classList.add("active");
+
+                    // Scroll to the corresponding section with smooth scrolling
+                    const targetSection = document.querySelector(this.getAttribute("href"));
+                    targetSection.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
+                });
+            });
+
+            // Function to update active class based on the scroll position
+            const updateActiveClassOnScroll = () => {
+                let currentSectionId = "";
+
+                // Loop through sections to determine which one is currently in view
+                sections.forEach((section) => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.offsetHeight;
+                    const sectionBottom = sectionTop + sectionHeight;
+
+                    // Adjust the trigger point for active class based on scroll position
+                    if (window.scrollY >= sectionTop - window.innerHeight / 3 && window.scrollY < sectionBottom - window.innerHeight / 3) {
+                        currentSectionId = section.getAttribute("id");
+                    }
+                });
+
+                // Loop through navigation links and highlight the one matching the current section
+                navLinks.forEach((link) => {
+                    link.classList.remove("active");
+                    if (link.getAttribute("href") === "#" + currentSectionId) {
+                        link.classList.add("active");
+                    }
+                });
+            };
+
+            // Throttle the scroll event to improve performance
+            let isScrolling = false;
+            window.addEventListener("scroll", () => {
+                if (!isScrolling) {
+                    isScrolling = true;
+                    // Use setTimeout to debounce the scroll event
+                    setTimeout(() => {
+                        updateActiveClassOnScroll();
+                        isScrolling = false;
+                    }, 100); // Adjust the debounce delay as necessary
+                }
+            });
+
+            // Initialize the active class based on the current scroll position on page load
+            updateActiveClassOnScroll();
+        });
+
+
     </script>
 
 
