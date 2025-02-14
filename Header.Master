@@ -22,9 +22,29 @@
                         <li><a href="#about">About</a></li>
                         <li><a href="#features">Features</a></li>
                         <li><a href="#team">Team</a></li>
-                        <asp:Label ID="lblWelcome" runat="server"></asp:Label>
-                        <asp:HyperLink ID="loginLink" runat="server" NavigateUrl="Login.aspx">Login</asp:HyperLink>
+
+                        <!-- Dropdown for User -->
+                        <li class="dropdown" id="userDropdown" runat="server" visible="false">
+                            <a href="#" class="dropdown-toggle">
+                                <asp:Label ID="lblWelcome" runat="server"></asp:Label>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <asp:Button ID="Button1" runat="server" CssClass="btn btn-danger dropdown-item" Text="My Resumes"/>
+                                </li>
+                                <li>
+                                    <asp:Button ID="logoutButton" runat="server" CssClass="btn btn-danger dropdown-item" Text="Logout" OnClick="LogoutButton_Click" />
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Login Link (Visible only if user is NOT logged in) -->
+                        <li id="loginItem" runat="server">
+                            <a href="Login.aspx" id="loginLink" runat="server">Login</a>
+                        </li>
+
                     </ul>
+
                     <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
                 </nav>
             </div>
@@ -35,7 +55,7 @@
         </asp:ContentPlaceHolder>
     </form>
 </body>
-    <script>
+<script>
     document.addEventListener("DOMContentLoaded", function () {
         // Cache the navigation links and sections
         const navLinks = document.querySelectorAll("#navmenu ul li a");
@@ -101,6 +121,11 @@
 
         // Initialize the active class based on the current scroll position on page load
         updateActiveClassOnScroll();
+    });
+</script>
+<script>
+    document.getElementById("loginLink").addEventListener("click", function () {
+        window.location.href = "Login.aspx";
     });
 </script>
 </html>

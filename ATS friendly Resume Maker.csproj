@@ -132,6 +132,7 @@
     <Content Include="assets\img\team\team-2.jpg" />
     <Content Include="assets\img\team\team-3.jpg" />
     <Content Include="assets\js\main.js" />
+    <Content Include="assets\js\script.js" />
     <Content Include="assets\vendor\aos\aos.cjs.js" />
     <Content Include="assets\vendor\aos\aos.css" />
     <Content Include="assets\vendor\aos\aos.esm.js" />
@@ -168,6 +169,7 @@
     <Content Include="assets\vendor\purecounter\purecounter_vanilla.js" />
     <Content Include="assets\vendor\swiper\swiper-bundle.min.css" />
     <Content Include="assets\vendor\swiper\swiper-bundle.min.js" />
+    <Content Include="form.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="Register.aspx" />
     <Content Include="main.css" />
@@ -175,6 +177,13 @@
     <Content Include="Default.aspx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="form.aspx.cs">
+      <DependentUpon>form.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="form.aspx.designer.cs">
+      <DependentUpon>form.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Header.Master.cs">
       <DependentUpon>Header.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

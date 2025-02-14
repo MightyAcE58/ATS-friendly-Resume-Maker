@@ -15,7 +15,10 @@
         body {
             height: 100%;
         }
+        .bg-body-tertiary{
+            background-color: #343541 !important;
 
+        }
         .form-signin {
             max-width: 330px;
             padding: 1rem;
@@ -41,8 +44,8 @@
 <body class="d-flex align-items-center py-4 bg-body-tertiary">
     <form id="form1" runat="server" class="form-signin w-100 m-auto">
         <div class="text-center">
-            <img class="mb-4" src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
-            <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+            <img class="mb-4" src="/assets/img/logo-nobg.png" alt="" width="300" height="67">
+            <h1 class="h3 mb-3 fw-normal text-white">Please sign in</h1>
         </div>
 
         <div class="form-floating">

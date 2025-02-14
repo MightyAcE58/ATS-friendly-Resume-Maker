@@ -18,6 +18,12 @@ namespace ATS_friendly_Resume_Maker
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            //Important
+            if (Session["UserFirstName"] != null && Session["UserLastName"] != null)
+            {
+                Response.Redirect("Default.aspx");
+            }
+
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
 

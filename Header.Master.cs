@@ -11,16 +11,29 @@ namespace ATS_friendly_Resume_Maker
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["UserFirstName"] != null && Session["UserLastName"] != null)
+            if (!IsPostBack)
             {
-                lblWelcome.Text = "Welcome, " + Session["UserFirstName"].ToString() + " " + Session["UserLastName"].ToString();
-                loginLink.Visible = false; // Hide login link if the user is logged in
+                loginLink.Attributes["href"] = "Login.aspx";
+
+                if (Session["UserFirstName"] != null && Session["UserLastName"] != null)
+                {
+                    lblWelcome.Text = "Welcome, " + Session["UserFirstName"].ToString() + " " + Session["UserLastName"].ToString();
+                    loginItem.Visible = false;  // Hide login if user is logged in
+                    userDropdown.Visible = true; // Show the welcome dropdown
+                }
+                else
+                {
+                    lblWelcome.Text = "";
+                    loginItem.Visible = true; // Show login if user is not logged in
+                    userDropdown.Visible = false; // Hide the welcome dropdown
+                }
             }
-            else
-            {
-                lblWelcome.Text = "";
-                loginLink.Visible = true; // Show login link if the user is not logged in
-            }
+        }
+
+        protected void LogoutButton_Click(object sender, EventArgs e)
+        {
+            Session.Abandon(); // Destroy session
+            Response.Redirect("Default.aspx");
         }
     }
 }
