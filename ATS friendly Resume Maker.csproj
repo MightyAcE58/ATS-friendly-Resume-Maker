@@ -173,13 +173,13 @@
     <Content Include="Login.aspx" />
     <Content Include="Register.aspx" />
     <Content Include="main.css" />
+    <Content Include="test-form.aspx" />
     <Content Include="Web.config" />
     <Content Include="Default.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="form.aspx.cs">
       <DependentUpon>form.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="form.aspx.designer.cs">
       <DependentUpon>form.aspx</DependentUpon>
@@ -212,6 +212,12 @@
     </Compile>
     <Compile Include="Register.aspx.designer.cs">
       <DependentUpon>Register.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="test-form.aspx.cs">
+      <DependentUpon>test-form.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="test-form.aspx.designer.cs">
+      <DependentUpon>test-form.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

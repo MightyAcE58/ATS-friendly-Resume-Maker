@@ -11,7 +11,7 @@ namespace ATS_friendly_Resume_Maker
 {
 
 
-    public partial class form
+    public partial class Resume_Maker
     {
 
         /// <summary>

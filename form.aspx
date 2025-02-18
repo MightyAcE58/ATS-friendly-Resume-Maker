@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" EnableEventValidation="false" CodeBehind="form.aspx.cs" Inherits="ATS_friendly_Resume_Maker.form" %>
+﻿<%@ Page Language="C#"  AutoEventWireup="true" EnableViewState="true" EnableEventValidation="false" CodeBehind="form.aspx.cs" Inherits="ATS_friendly_Resume_Maker.Resume_Maker" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -78,30 +78,30 @@
             .btn-remove:hover {
                 background-color: #c82333 !important;
             }
-            
+
         .date-container, .years-container {
             display: flex;
             gap: 10px;
         }
-        
+
         .action-buttons {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
             margin-bottom: 20px;
         }
-        
-        .action-buttons .btn {
-            flex: 1;
-            min-width: 200px;
-        }
+
+            .action-buttons .btn {
+                flex: 1;
+                min-width: 200px;
+            }
     </style>
 </head>
 <body>
     <form id="form1" runat="server">
         <div class="form-container">
             <h1>ATS-Friendly Resume Maker</h1>
-            
+
             <asp:ScriptManager ID="ScriptManager1" runat="server" />
             <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional">
                 <ContentTemplate>
@@ -113,17 +113,18 @@
                     </div>
 
                     <asp:Panel ID="pnlForms" runat="server">
+                        <!-- Employment Section -->
                         <asp:Repeater ID="rptEmployment" runat="server" OnItemCommand="rptEmployment_ItemCommand" OnItemDataBound="rptEmployment_ItemDataBound">
                             <ItemTemplate>
                                 <div class="employment-entry">
                                     <h3>Employment Information</h3>
-                                    
+
                                     <label for="txtCompany">Company Name:</label>
                                     <asp:TextBox ID="txtCompany" runat="server" placeholder="Enter company name"></asp:TextBox>
 
                                     <label for="txtTitle">Job Title:</label>
                                     <asp:TextBox ID="txtTitle" runat="server" placeholder="Enter job title"></asp:TextBox>
-                                    
+
                                     <label for="ddlEmployment">Employment Type:</label>
                                     <asp:DropDownList ID="ddlEmployment" runat="server">
                                         <asp:ListItem Text="Full-time" Value="Full-time" />
@@ -132,7 +133,7 @@
                                         <asp:ListItem Text="Freelance" Value="Freelance" />
                                         <asp:ListItem Text="Internship" Value="Internship" />
                                     </asp:DropDownList>
-                                    
+
                                     <label>Start Date:</label>
                                     <div class="date-container">
                                         <asp:DropDownList ID="ddlStartMonth" runat="server">
@@ -149,11 +150,11 @@
                                             <asp:ListItem Text="November" Value="11" />
                                             <asp:ListItem Text="December" Value="12" />
                                         </asp:DropDownList>
-                                        
+
                                         <asp:DropDownList ID="ddlStartYear" runat="server">
                                         </asp:DropDownList>
                                     </div>
-                                    
+
                                     <label>End Date:</label>
                                     <div class="date-container">
                                         <asp:DropDownList ID="ddlEndMonth" runat="server">
@@ -170,35 +171,36 @@
                                             <asp:ListItem Text="November" Value="11" />
                                             <asp:ListItem Text="December" Value="12" />
                                         </asp:DropDownList>
-                                        
+
                                         <asp:DropDownList ID="ddlEndYear" runat="server">
                                         </asp:DropDownList>
                                     </div>
-                                    
+
                                     <label for="txtLocation">Location:</label>
                                     <asp:TextBox ID="txtLocation" runat="server" placeholder="City, State, Country"></asp:TextBox>
-                                    
+
                                     <label for="txtDescription">Description:</label>
-                                    <asp:TextBox ID="txtDescription" runat="server" TextMode="MultiLine" Rows="4" 
+                                    <asp:TextBox ID="txtDescription" runat="server" TextMode="MultiLine" Rows="4"
                                         placeholder="Describe your responsibilities and achievements"></asp:TextBox>
 
-                                    <asp:Button ID="btnRemove" runat="server" Text="Remove" CssClass="btn-remove" 
+                                    <asp:Button ID="btnRemove" runat="server" Text="Remove" CssClass="btn-remove"
                                         CommandName="Remove" CommandArgument="<%# Container.ItemIndex %>" />
                                 </div>
                             </ItemTemplate>
                         </asp:Repeater>
 
+                        <!-- Education Section -->
                         <asp:Repeater ID="rptEducation" runat="server" OnItemCommand="rptEducation_ItemCommand" OnItemDataBound="rptEducation_ItemDataBound">
                             <ItemTemplate>
                                 <div class="education-entry">
                                     <h3>Education Information</h3>
-                                    
+
                                     <label for="txtSchool">School Name:</label>
                                     <asp:TextBox ID="txtSchool" runat="server" placeholder="Enter school name"></asp:TextBox>
 
                                     <label for="txtDegree">Degree:</label>
                                     <asp:TextBox ID="txtDegree" runat="server" placeholder="Enter degree"></asp:TextBox>
-                                    
+
                                     <label>Years Attended:</label>
                                     <div class="years-container">
                                         <asp:DropDownList ID="ddlStartYear" runat="server">
@@ -207,25 +209,26 @@
                                         <asp:DropDownList ID="ddlEndYear" runat="server">
                                         </asp:DropDownList>
                                     </div>
-                                    
+
                                     <label for="txtCity">City:</label>
                                     <asp:TextBox ID="txtCity" runat="server" placeholder="City, State, Country"></asp:TextBox>
-                                    
+
                                     <label for="txtEduDescription">Description:</label>
-                                    <asp:TextBox ID="txtEduDescription" runat="server" TextMode="MultiLine" Rows="4" 
+                                    <asp:TextBox ID="txtEduDescription" runat="server" TextMode="MultiLine" Rows="4"
                                         placeholder="Describe your studies, achievements, activities"></asp:TextBox>
 
-                                    <asp:Button ID="btnRemove" runat="server" Text="Remove" CssClass="btn-remove" 
-                                        CommandName="Remove" CommandArgument="<%# Container.ItemIndex %>"/>
+                                    <asp:Button ID="btnRemove" runat="server" Text="Remove" CssClass="btn-remove"
+                                        CommandName="Remove" CommandArgument="<%# Container.ItemIndex %>" />
                                 </div>
                             </ItemTemplate>
                         </asp:Repeater>
-                        
-                        <asp:Repeater ID="rptLinks" runat="server" OnItemCommand="rptLinks_ItemCommand">
+
+                        <!-- Website/Links Section -->
+                        <asp:Repeater ID="rptLinks" runat="server" OnItemCommand="rptLinks_ItemCommand" OnItemDataBound="rptLinks_ItemDataBound">
                             <ItemTemplate>
                                 <div class="link-entry">
                                     <h3>Website/Link Information</h3>
-                                    
+
                                     <label for="txtLabel">Label:</label>
                                     <asp:TextBox ID="txtLabel" runat="server" placeholder="Enter label (e.g., Portfolio, LinkedIn)"></asp:TextBox>
 
@@ -238,14 +241,15 @@
                             </ItemTemplate>
                         </asp:Repeater>
 
+                        <!-- Skills Section -->
                         <asp:Repeater ID="rptSkills" runat="server" OnItemCommand="rptSkills_ItemCommand">
                             <ItemTemplate>
                                 <div class="skill-entry">
                                     <h3>Skills Information</h3>
-                                    
+
                                     <label for="txtSkill">Skill:</label>
                                     <asp:TextBox ID="txtSkill" runat="server" placeholder="Enter skill"></asp:TextBox>
-                                    
+
                                     <asp:Button ID="btnRemove" runat="server" Text="Remove" CssClass="btn-remove"
                                         CommandName="Remove" CommandArgument="<%# Container.ItemIndex %>" />
                                 </div>

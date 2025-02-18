@@ -1,66 +1,110 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace ATS_friendly_Resume_Maker
 {
-    public partial class form : System.Web.UI.Page
+    [Serializable]
+    public class EmploymentData
     {
+        public string Company { get; set; }
+        public string Title { get; set; }
+        public string EmploymentType { get; set; }
+        public int StartMonth { get; set; }
+        public int StartYear { get; set; }
+        public int EndMonth { get; set; }
+        public int EndYear { get; set; }
+        public string Location { get; set; }
+        public string Description { get; set; }
+    }
+
+    [Serializable]
+    public class EducationData
+    {
+        public string School { get; set; }
+        public string Degree { get; set; }
+        public int StartYear { get; set; }
+        public int EndYear { get; set; }
+        public string City { get; set; }
+        public string Description { get; set; }
+    }
+
+    [Serializable]
+    public class LinkData
+    {
+        public string Label { get; set; }
+        public string Url { get; set; }
+    }
+
+    [Serializable]
+    public class SkillData
+    {
+        public string Skill { get; set; }
+    }
+
+    public partial class Resume_Maker : System.Web.UI.Page
+    {
+        private List<EmploymentData> EmploymentEntries
+        {
+            get => (List<EmploymentData>)ViewState["EmploymentEntries"] ?? new List<EmploymentData>();
+            set => ViewState["EmploymentEntries"] = value;
+        }
+
+        private List<EducationData> EducationEntries
+        {
+            get => (List<EducationData>)ViewState["EducationEntries"] ?? new List<EducationData>();
+            set => ViewState["EducationEntries"] = value;
+        }
+
+        private List<LinkData> LinkEntries
+        {
+            get => (List<LinkData>)ViewState["LinkEntries"] ?? new List<LinkData>();
+            set => ViewState["LinkEntries"] = value;
+        }
+
+        private List<SkillData> SkillEntries
+        {
+            get => (List<SkillData>)ViewState["SkillEntries"] ?? new List<SkillData>();
+            set => ViewState["SkillEntries"] = value;
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                // Initialize ViewState collections
-                ViewState["EmploymentForms"] = new List<FormData>();
-                ViewState["EducationForms"] = new List<FormData>();
-                ViewState["WebsiteForms"] = new List<FormData>();
-                ViewState["SkillsForms"] = new List<FormData>();
-
-                // Initialize year dropdowns for all entries that might be added
-                PopulateYearDropdowns();
+                InitializeYearDropdowns();
+                BindAllRepeaters();
             }
-
-            BindAllRepeaters();
         }
 
-        private void PopulateYearDropdowns()
+        private void InitializeYearDropdowns()
         {
-            // This will be called when new items are added to make sure year dropdowns are populated
+            // Populate year dropdown lists for the first time
             int currentYear = DateTime.Now.Year;
-            List<int> years = new List<int>();
-
-            // Generate a list of years (e.g., last 50 years to current year)
-            for (int i = currentYear - 50; i <= currentYear; i++)
-            {
-                years.Add(i);
-            }
-
-            ViewState["YearsList"] = years;
+            List<int> years = Enumerable.Range(currentYear - 50, 51).Reverse().ToList();
         }
 
-        private void PopulateYearDropdownInItem(RepeaterItem item, string startYearID, string endYearID)
+
+        protected void btnAddEmployment_Click(object sender, EventArgs e)
         {
-            if (item == null) return;
+            SaveEmploymentValues();
+            EmploymentEntries.Add(new EmploymentData());
+            BindEmploymentRepeater();
+        }
 
-            DropDownList ddlStartYear = item.FindControl(startYearID) as DropDownList;
-            DropDownList ddlEndYear = item.FindControl(endYearID) as DropDownList;
-
-            if (ddlStartYear != null && ddlEndYear != null)
+        protected void rptEmployment_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            if (e.CommandName == "Remove")
             {
-                List<int> years = ViewState["YearsList"] as List<int>;
-                if (years != null)
+                SaveEmploymentValues();
+                int index = Convert.ToInt32(e.CommandArgument);
+                if (index >= 0 && index < EmploymentEntries.Count)
                 {
-                    ddlStartYear.Items.Clear();
-                    ddlEndYear.Items.Clear();
-
-                    // Add "Present" option to end year dropdown
-                    ddlEndYear.Items.Add(new ListItem("Present", "Present"));
-
-                    foreach (int year in years)
-                    {
-                        ddlStartYear.Items.Add(new ListItem(year.ToString(), year.ToString()));
-                        ddlEndYear.Items.Add(new ListItem(year.ToString(), year.ToString()));
-                    }
+                    EmploymentEntries.RemoveAt(index);
+                    BindEmploymentRepeater();
                 }
             }
         }
@@ -69,7 +113,102 @@ namespace ATS_friendly_Resume_Maker
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
-                PopulateYearDropdownInItem(e.Item, "ddlStartYear", "ddlEndYear");
+                var entry = (EmploymentData)e.Item.DataItem;
+                InitializeEmploymentItem(e, entry);
+            }
+        }
+
+        private void InitializeEmploymentItem(RepeaterItemEventArgs e, EmploymentData entry)
+        {
+            var ddlStartYear = (DropDownList)e.Item.FindControl("ddlStartYear");
+            var ddlEndYear = (DropDownList)e.Item.FindControl("ddlEndYear");
+
+            PopulateYearDropdowns(ddlStartYear, ddlEndYear);
+
+            var txtCompany = (TextBox)e.Item.FindControl("txtCompany");
+            var txtTitle = (TextBox)e.Item.FindControl("txtTitle");
+            var ddlEmployment = (DropDownList)e.Item.FindControl("ddlEmployment");
+            var ddlStartMonth = (DropDownList)e.Item.FindControl("ddlStartMonth");
+            var ddlEndMonth = (DropDownList)e.Item.FindControl("ddlEndMonth");
+            var txtLocation = (TextBox)e.Item.FindControl("txtLocation");
+            var txtDescription = (TextBox)e.Item.FindControl("txtDescription");
+
+            txtCompany.Text = entry.Company;
+            txtTitle.Text = entry.Title;
+            ddlEmployment.SelectedValue = entry.EmploymentType;
+            ddlStartMonth.SelectedValue = entry.StartMonth.ToString();
+            ddlStartYear.SelectedValue = entry.StartYear.ToString();
+            ddlEndYear.SelectedValue = entry.EndYear.ToString() == "0" ? "0" : entry.EndYear.ToString();
+            ddlEndMonth.SelectedValue = entry.EndMonth.ToString();
+            txtLocation.Text = entry.Location;
+            txtDescription.Text = entry.Description;
+        }
+
+        private void PopulateYearDropdowns(DropDownList ddlStartYear, DropDownList ddlEndYear)
+        {
+            int currentYear = DateTime.Now.Year;
+            for (int year = currentYear; year >= currentYear - 50; year--)
+            {
+                ddlStartYear.Items.Add(new ListItem(year.ToString(), year.ToString()));
+                ddlEndYear.Items.Add(new ListItem(year.ToString(), year.ToString()));
+            }
+            ddlEndYear.Items.Add(new ListItem("Present", "0"));
+        }
+
+        private void SaveEmploymentValues()
+        {
+            for (int i = 0; i < rptEmployment.Items.Count; i++)
+            {
+                var item = rptEmployment.Items[i];
+                var txtCompany = (TextBox)item.FindControl("txtCompany");
+                var txtTitle = (TextBox)item.FindControl("txtTitle");
+                var ddlEmployment = (DropDownList)item.FindControl("ddlEmployment");
+                var ddlStartMonth = (DropDownList)item.FindControl("ddlStartMonth");
+                var ddlStartYear = (DropDownList)item.FindControl("ddlStartYear");
+                var ddlEndMonth = (DropDownList)item.FindControl("ddlEndMonth");
+                var ddlEndYear = (DropDownList)item.FindControl("ddlEndYear");
+                var txtLocation = (TextBox)item.FindControl("txtLocation");
+                var txtDescription = (TextBox)item.FindControl("txtDescription");
+
+                if (i < EmploymentEntries.Count)
+                {
+                    EmploymentEntries[i].Company = txtCompany.Text;
+                    EmploymentEntries[i].Title = txtTitle.Text;
+                    EmploymentEntries[i].EmploymentType = ddlEmployment.SelectedValue;
+                    EmploymentEntries[i].StartMonth = Convert.ToInt32(ddlStartMonth.SelectedValue);
+                    EmploymentEntries[i].StartYear = Convert.ToInt32(ddlStartYear.SelectedValue);
+                    EmploymentEntries[i].EndMonth = Convert.ToInt32(ddlEndMonth.SelectedValue);
+                    EmploymentEntries[i].EndYear = Convert.ToInt32(ddlEndYear.SelectedValue);
+                    EmploymentEntries[i].Location = txtLocation.Text;
+                    EmploymentEntries[i].Description = txtDescription.Text;
+                }
+            }
+        }
+
+        private void BindEmploymentRepeater()
+        {
+            rptEmployment.DataSource = EmploymentEntries;
+            rptEmployment.DataBind();
+        }
+
+        protected void btnAddEducation_Click(object sender, EventArgs e)
+        {
+            SaveEducationValues();
+            EducationEntries.Add(new EducationData());
+            BindEducationRepeater();
+        }
+
+        protected void rptEducation_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            if (e.CommandName == "Remove")
+            {
+                SaveEducationValues();
+                int index = Convert.ToInt32(e.CommandArgument);
+                if (index >= 0 && index < EducationEntries.Count)
+                {
+                    EducationEntries.RemoveAt(index);
+                    BindEducationRepeater();
+                }
             }
         }
 
@@ -77,206 +216,184 @@ namespace ATS_friendly_Resume_Maker
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
-                PopulateYearDropdownInItem(e.Item, "ddlStartYear", "ddlEndYear");
+                var entry = (EducationData)e.Item.DataItem;
+                InitializeEducationItem(e, entry);
             }
         }
 
-        private void BindAllRepeaters()
+        private void InitializeEducationItem(RepeaterItemEventArgs e, EducationData entry)
         {
-            BindRepeater(rptEmployment, "EmploymentForms");
-            BindRepeater(rptEducation, "EducationForms");
-            BindRepeater(rptLinks, "WebsiteForms");
-            BindRepeater(rptSkills, "SkillsForms");
+            var ddlStartYear = (DropDownList)e.Item.FindControl("ddlStartYear");
+            var ddlEndYear = (DropDownList)e.Item.FindControl("ddlEndYear");
+
+            PopulateYearDropdowns(ddlStartYear, ddlEndYear);
+
+            var txtSchool = (TextBox)e.Item.FindControl("txtSchool");
+            var txtDegree = (TextBox)e.Item.FindControl("txtDegree");
+            var txtCity = (TextBox)e.Item.FindControl("txtCity");
+            var txtEduDescription = (TextBox)e.Item.FindControl("txtEduDescription");
+
+            txtSchool.Text = entry.School;
+            txtDegree.Text = entry.Degree;
+            ddlStartYear.SelectedValue = entry.StartYear.ToString();
+            ddlEndYear.SelectedValue = entry.EndYear.ToString() == "0" ? "0" : entry.EndYear.ToString();
+            txtCity.Text = entry.City;
+            txtEduDescription.Text = entry.Description;
         }
 
-        private void BindRepeater(Repeater repeater, string viewStateKey)
+        private void SaveEducationValues()
         {
-            repeater.DataSource = ViewState[viewStateKey] as List<FormData> ?? new List<FormData>();
-            repeater.DataBind();
+            for (int i = 0; i < rptEducation.Items.Count; i++)
+            {
+                var item = rptEducation.Items[i];
+                var txtSchool = (TextBox)item.FindControl("txtSchool");
+                var txtDegree = (TextBox)item.FindControl("txtDegree");
+                var ddlStartYear = (DropDownList)item.FindControl("ddlStartYear");
+                var ddlEndYear = (DropDownList)item.FindControl("ddlEndYear");
+                var txtCity = (TextBox)item.FindControl("txtCity");
+                var txtEduDescription = (TextBox)item.FindControl("txtEduDescription");
+
+                if (i < EducationEntries.Count)
+                {
+                    EducationEntries[i].School = txtSchool.Text;
+                    EducationEntries[i].Degree = txtDegree.Text;
+                    EducationEntries[i].StartYear = Convert.ToInt32(ddlStartYear.SelectedValue);
+                    EducationEntries[i].EndYear = Convert.ToInt32(ddlEndYear.SelectedValue);
+                    EducationEntries[i].City = txtCity.Text;
+                    EducationEntries[i].Description = txtEduDescription.Text;
+                }
+            }
         }
 
-        protected void btnAddEmployment_Click(object sender, EventArgs e) => AddItem("EmploymentForms");
-        protected void btnAddEducation_Click(object sender, EventArgs e) => AddItem("EducationForms");
-        protected void btnAddWebsite_Click(object sender, EventArgs e) => AddItem("WebsiteForms");
-        protected void btnAddSkills_Click(object sender, EventArgs e) => AddItem("SkillsForms");
-
-        private void AddItem(string viewStateKey)
+        private void BindEducationRepeater()
         {
-            var forms = ViewState[viewStateKey] as List<FormData> ?? new List<FormData>();
-            forms.Add(new FormData());
-            ViewState[viewStateKey] = forms;
-            BindAllRepeaters();
+            rptEducation.DataSource = EducationEntries;
+            rptEducation.DataBind();
         }
 
-        protected void rptEmployment_ItemCommand(object source, RepeaterCommandEventArgs e)
-        {
-            if (e.CommandName == "Remove")
-                RemoveItem("EmploymentForms", Convert.ToInt32(e.CommandArgument));
-        }
 
-        protected void rptEducation_ItemCommand(object source, RepeaterCommandEventArgs e)
+
+        protected void btnAddWebsite_Click(object sender, EventArgs e)
         {
-            if (e.CommandName == "Remove")
-                RemoveItem("EducationForms", Convert.ToInt32(e.CommandArgument));
+            SaveLinkValues();
+            LinkEntries.Add(new LinkData());
+            BindLinksRepeater();
         }
 
         protected void rptLinks_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             if (e.CommandName == "Remove")
-                RemoveItem("WebsiteForms", Convert.ToInt32(e.CommandArgument));
+            {
+                int index = Convert.ToInt32(e.CommandArgument);
+                LinkEntries.RemoveAt(index);
+                BindLinksRepeater();
+            }
+        }
+
+        protected void rptLinks_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                var linkData = (LinkData)e.Item.DataItem;
+                var txtLabel = (TextBox)e.Item.FindControl("txtLabel");
+                var txtUrl = (TextBox)e.Item.FindControl("txtUrl");
+
+                txtLabel.Text = linkData.Label;
+                txtUrl.Text = linkData.Url;
+            }
+        }
+
+        private void SaveLinkValues()
+        {
+            List<LinkData> currentLinks = new List<LinkData>();
+            foreach (RepeaterItem item in rptLinks.Items)
+            {
+                var txtLabel = (TextBox)item.FindControl("txtLabel");
+                var txtUrl = (TextBox)item.FindControl("txtUrl");
+
+                currentLinks.Add(new LinkData
+                {
+                    Label = txtLabel.Text,
+                    Url = txtUrl.Text
+                });
+            }
+            LinkEntries = currentLinks;
+        }
+
+        private void BindLinksRepeater()
+        {
+            rptLinks.DataSource = LinkEntries;
+            rptLinks.DataBind();
+        }
+
+
+
+        protected void btnAddSkills_Click(object sender, EventArgs e)
+        {
+            SaveSkillValues();
+            SkillEntries.Add(new SkillData());
+            BindSkillsRepeater();
         }
 
         protected void rptSkills_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             if (e.CommandName == "Remove")
-                RemoveItem("SkillsForms", Convert.ToInt32(e.CommandArgument));
+            {
+                SaveSkillValues();
+                int index = Convert.ToInt32(e.CommandArgument);
+                if (index >= 0 && index < SkillEntries.Count)
+                {
+                    SkillEntries.RemoveAt(index);
+                    BindSkillsRepeater();
+                }
+            }
+        }
+
+        private void SaveSkillValues()
+        {
+            List<SkillData> currentSkills = new List<SkillData>();
+
+            for (int i = 0; i < rptSkills.Items.Count; i++)
+            {
+                var item = rptSkills.Items[i];
+                var txtSkill = (TextBox)item.FindControl("txtSkill");
+
+                currentSkills.Add(new SkillData
+                {
+                    Skill = txtSkill.Text
+                });
+            }
+            SkillEntries = currentSkills;
+        }
+
+        private void BindSkillsRepeater()
+        {
+            rptSkills.DataSource = SkillEntries;
+            rptSkills.DataBind();
         }
 
 
-
-        protected void RemoveItem(string viewStateKey, int index)
+        private void BindAllRepeaters()
         {
-            var forms = ViewState[viewStateKey] as List<FormData>;
-            if (forms != null && index >= 0 && index < forms.Count)
-            {
-                forms.RemoveAt(index);
-                ViewState[viewStateKey] = forms;
-                BindAllRepeaters();
-            }
+            BindEmploymentRepeater();
+            BindEducationRepeater();
+            BindLinksRepeater();
+            BindSkillsRepeater();
         }
 
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
-            // Get employment data
-            List<EmploymentData> employmentList = new List<EmploymentData>();
-            foreach (RepeaterItem item in rptEmployment.Items)
-            {
-                TextBox txtCompany = item.FindControl("txtCompany") as TextBox;
-                TextBox txtTitle = item.FindControl("txtTitle") as TextBox;
-                DropDownList ddlEmployment = item.FindControl("ddlEmployment") as DropDownList;
-                DropDownList ddlStartMonth = item.FindControl("ddlStartMonth") as DropDownList;
-                DropDownList ddlStartYear = item.FindControl("ddlStartYear") as DropDownList;
-                DropDownList ddlEndMonth = item.FindControl("ddlEndMonth") as DropDownList;
-                DropDownList ddlEndYear = item.FindControl("ddlEndYear") as DropDownList;
-                TextBox txtLocation = item.FindControl("txtLocation") as TextBox;
-                TextBox txtDescription = item.FindControl("txtDescription") as TextBox;
+            SaveEmploymentValues();
+            SaveEducationValues();
+            SaveLinkValues();
+            SaveSkillValues();
 
-                if (txtCompany != null && txtTitle != null)
-                {
-                    employmentList.Add(new EmploymentData
-                    {
-                        Company = txtCompany.Text,
-                        Title = txtTitle.Text,
-                        EmploymentType = ddlEmployment?.SelectedValue,
-                        StartMonth = ddlStartMonth?.SelectedValue,
-                        StartYear = ddlStartYear?.SelectedValue,
-                        EndMonth = ddlEndMonth?.SelectedValue,
-                        EndYear = ddlEndYear?.SelectedValue,
-                        Location = txtLocation?.Text,
-                        Description = txtDescription?.Text
-                    });
-                }
-            }
+            Session["EmploymentEntries"] = EmploymentEntries;
+            Session["EducationEntries"] = EducationEntries;
+            Session["LinkEntries"] = LinkEntries;
+            Session["SkillEntries"] = SkillEntries;
 
-            // Get education data
-            List<EducationData> educationList = new List<EducationData>();
-            foreach (RepeaterItem item in rptEducation.Items)
-            {
-                TextBox txtSchool = item.FindControl("txtSchool") as TextBox;
-                TextBox txtDegree = item.FindControl("txtDegree") as TextBox;
-                DropDownList ddlStartYear = item.FindControl("ddlStartYear") as DropDownList;
-                DropDownList ddlEndYear = item.FindControl("ddlEndYear") as DropDownList;
-                TextBox txtCity = item.FindControl("txtCity") as TextBox;
-                TextBox txtEduDescription = item.FindControl("txtEduDescription") as TextBox;
-
-                if (txtSchool != null && txtDegree != null)
-                {
-                    educationList.Add(new EducationData
-                    {
-                        School = txtSchool.Text,
-                        Degree = txtDegree.Text,
-                        StartYear = ddlStartYear?.SelectedValue,
-                        EndYear = ddlEndYear?.SelectedValue,
-                        City = txtCity?.Text,
-                        Description = txtEduDescription?.Text
-                    });
-                }
-            }
-
-            // Get website/link data
-            List<WebsiteData> websiteList = new List<WebsiteData>();
-            foreach (RepeaterItem item in rptLinks.Items)
-            {
-                TextBox txtLabel = item.FindControl("txtLabel") as TextBox;
-                TextBox txtUrl = item.FindControl("txtUrl") as TextBox;
-
-                if (txtLabel != null && txtUrl != null)
-                {
-                    websiteList.Add(new WebsiteData
-                    {
-                        Label = txtLabel.Text,
-                        Url = txtUrl.Text
-                    });
-                }
-            }
-
-            // Get skills data
-            List<string> skillsList = new List<string>();
-            foreach (RepeaterItem item in rptSkills.Items)
-            {
-                TextBox txtSkill = item.FindControl("txtSkill") as TextBox;
-
-                if (txtSkill != null && !string.IsNullOrWhiteSpace(txtSkill.Text))
-                {
-                    skillsList.Add(txtSkill.Text);
-                }
-            }
-
-            // TODO: Process all collected data to generate resume
-            // For now, you could store in Session or redirect to a result page
-        }
-
-        // Updated FormData class to match the base structure
-        [Serializable]
-        public class FormData
-        {
-            public string Field1 { get; set; }
-            public string Field2 { get; set; }
-        }
-
-        // New class for employment data
-        [Serializable]
-        public class EmploymentData
-        {
-            public string Company { get; set; }
-            public string Title { get; set; }
-            public string EmploymentType { get; set; }
-            public string StartMonth { get; set; }
-            public string StartYear { get; set; }
-            public string EndMonth { get; set; }
-            public string EndYear { get; set; }
-            public string Location { get; set; }
-            public string Description { get; set; }
-        }
-
-        // New class for education data
-        [Serializable]
-        public class EducationData
-        {
-            public string School { get; set; }
-            public string Degree { get; set; }
-            public string StartYear { get; set; }
-            public string EndYear { get; set; }
-            public string City { get; set; }
-            public string Description { get; set; }
-        }
-
-        // New class for website/link data
-        [Serializable]
-        public class WebsiteData
-        {
-            public string Label { get; set; }
-            public string Url { get; set; }
+            Response.Redirect("ResumeResult.aspx");
         }
     }
 }
