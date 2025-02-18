@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Linq;
 
 namespace ATS_friendly_Resume_Maker
 {
@@ -47,28 +47,69 @@ namespace ATS_friendly_Resume_Maker
 
     public partial class Resume_Maker : System.Web.UI.Page
     {
+
         private List<EmploymentData> EmploymentEntries
         {
-            get => (List<EmploymentData>)ViewState["EmploymentEntries"] ?? new List<EmploymentData>();
-            set => ViewState["EmploymentEntries"] = value;
+            get
+            {
+                if (ViewState["EmploymentEntries"] == null)
+                {
+                    ViewState["EmploymentEntries"] = new List<EmploymentData>();
+                }
+                return (List<EmploymentData>)ViewState["EmploymentEntries"];
+            }
+            set
+            {
+                ViewState["EmploymentEntries"] = value;
+            }
         }
 
         private List<EducationData> EducationEntries
         {
-            get => (List<EducationData>)ViewState["EducationEntries"] ?? new List<EducationData>();
-            set => ViewState["EducationEntries"] = value;
+            get
+            {
+                if (ViewState["EducationEntries"] == null)
+                {
+                    ViewState["EducationEntries"] = new List<EducationData>();
+                }
+                return (List<EducationData>)ViewState["EducationEntries"];
+            }
+            set
+            {
+                ViewState["EducationEntries"] = value;
+            }
         }
 
         private List<LinkData> LinkEntries
         {
-            get => (List<LinkData>)ViewState["LinkEntries"] ?? new List<LinkData>();
-            set => ViewState["LinkEntries"] = value;
+            get
+            {
+                if (ViewState["LinkEntries"] == null)
+                {
+                    ViewState["LinkEntries"] = new List<LinkData>();
+                }
+                return (List<LinkData>)ViewState["LinkEntries"];
+            }
+            set
+            {
+                ViewState["LinkEntries"] = value;
+            }
         }
 
         private List<SkillData> SkillEntries
         {
-            get => (List<SkillData>)ViewState["SkillEntries"] ?? new List<SkillData>();
-            set => ViewState["SkillEntries"] = value;
+            get
+            {
+                if (ViewState["SkillEntries"] == null)
+                {
+                    ViewState["SkillEntries"] = new List<SkillData>();
+                }
+                return (List<SkillData>)ViewState["SkillEntries"];
+            }
+            set
+            {
+                ViewState["SkillEntries"] = value;
+            }
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -85,9 +126,11 @@ namespace ATS_friendly_Resume_Maker
             // Populate year dropdown lists for the first time
             int currentYear = DateTime.Now.Year;
             List<int> years = Enumerable.Range(currentYear - 50, 51).Reverse().ToList();
+
+            // No need to populate here as it will be done in ItemDataBound events
         }
 
-
+        #region Employment Methods
         protected void btnAddEmployment_Click(object sender, EventArgs e)
         {
             SaveEmploymentValues();
@@ -113,62 +156,79 @@ namespace ATS_friendly_Resume_Maker
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
-                var entry = (EmploymentData)e.Item.DataItem;
-                InitializeEmploymentItem(e, entry);
+                DropDownList ddlStartYear = (DropDownList)e.Item.FindControl("ddlStartYear");
+                DropDownList ddlEndYear = (DropDownList)e.Item.FindControl("ddlEndYear");
+
+                // Fill years
+                int currentYear = DateTime.Now.Year;
+                for (int year = currentYear; year >= currentYear - 50; year--)
+                {
+                    ddlStartYear.Items.Add(new ListItem(year.ToString(), year.ToString()));
+                    ddlEndYear.Items.Add(new ListItem(year.ToString(), year.ToString()));
+                }
+
+                // Add "Present" option to end year
+                ddlEndYear.Items.Add(new ListItem("Present", "0"));
+
+                // Set selected values if data exists
+                EmploymentData entry = (EmploymentData)e.Item.DataItem;
+                if (entry != null)
+                {
+                    TextBox txtCompany = (TextBox)e.Item.FindControl("txtCompany");
+                    TextBox txtTitle = (TextBox)e.Item.FindControl("txtTitle");
+                    DropDownList ddlEmployment = (DropDownList)e.Item.FindControl("ddlEmployment");
+                    DropDownList ddlStartMonth = (DropDownList)e.Item.FindControl("ddlStartMonth");
+                    DropDownList ddlEndMonth = (DropDownList)e.Item.FindControl("ddlEndMonth");
+                    TextBox txtLocation = (TextBox)e.Item.FindControl("txtLocation");
+                    TextBox txtDescription = (TextBox)e.Item.FindControl("txtDescription");
+
+                    txtCompany.Text = entry.Company;
+                    txtTitle.Text = entry.Title;
+                    if (!string.IsNullOrEmpty(entry.EmploymentType))
+                    {
+                        ddlEmployment.SelectedValue = entry.EmploymentType;
+                    }
+                    if (entry.StartMonth > 0)
+                    {
+                        ddlStartMonth.SelectedValue = entry.StartMonth.ToString();
+                    }
+                    if (entry.StartYear > 0)
+                    {
+                        ddlStartYear.SelectedValue = entry.StartYear.ToString();
+                    }
+                    if (entry.EndYear > 0)
+                    {
+                        ddlEndYear.SelectedValue = entry.EndYear.ToString();
+                    }
+                    else if (entry.EndYear == 0) // "Present"
+                    {
+                        ddlEndYear.SelectedValue = "0";
+                    }
+                    if (entry.EndMonth > 0)
+                    {
+                        ddlEndMonth.SelectedValue = entry.EndMonth.ToString();
+                    }
+                    txtLocation.Text = entry.Location;
+                    txtDescription.Text = entry.Description;
+                }
             }
-        }
-
-        private void InitializeEmploymentItem(RepeaterItemEventArgs e, EmploymentData entry)
-        {
-            var ddlStartYear = (DropDownList)e.Item.FindControl("ddlStartYear");
-            var ddlEndYear = (DropDownList)e.Item.FindControl("ddlEndYear");
-
-            PopulateYearDropdowns(ddlStartYear, ddlEndYear);
-
-            var txtCompany = (TextBox)e.Item.FindControl("txtCompany");
-            var txtTitle = (TextBox)e.Item.FindControl("txtTitle");
-            var ddlEmployment = (DropDownList)e.Item.FindControl("ddlEmployment");
-            var ddlStartMonth = (DropDownList)e.Item.FindControl("ddlStartMonth");
-            var ddlEndMonth = (DropDownList)e.Item.FindControl("ddlEndMonth");
-            var txtLocation = (TextBox)e.Item.FindControl("txtLocation");
-            var txtDescription = (TextBox)e.Item.FindControl("txtDescription");
-
-            txtCompany.Text = entry.Company;
-            txtTitle.Text = entry.Title;
-            ddlEmployment.SelectedValue = entry.EmploymentType;
-            ddlStartMonth.SelectedValue = entry.StartMonth.ToString();
-            ddlStartYear.SelectedValue = entry.StartYear.ToString();
-            ddlEndYear.SelectedValue = entry.EndYear.ToString() == "0" ? "0" : entry.EndYear.ToString();
-            ddlEndMonth.SelectedValue = entry.EndMonth.ToString();
-            txtLocation.Text = entry.Location;
-            txtDescription.Text = entry.Description;
-        }
-
-        private void PopulateYearDropdowns(DropDownList ddlStartYear, DropDownList ddlEndYear)
-        {
-            int currentYear = DateTime.Now.Year;
-            for (int year = currentYear; year >= currentYear - 50; year--)
-            {
-                ddlStartYear.Items.Add(new ListItem(year.ToString(), year.ToString()));
-                ddlEndYear.Items.Add(new ListItem(year.ToString(), year.ToString()));
-            }
-            ddlEndYear.Items.Add(new ListItem("Present", "0"));
         }
 
         private void SaveEmploymentValues()
         {
             for (int i = 0; i < rptEmployment.Items.Count; i++)
             {
-                var item = rptEmployment.Items[i];
-                var txtCompany = (TextBox)item.FindControl("txtCompany");
-                var txtTitle = (TextBox)item.FindControl("txtTitle");
-                var ddlEmployment = (DropDownList)item.FindControl("ddlEmployment");
-                var ddlStartMonth = (DropDownList)item.FindControl("ddlStartMonth");
-                var ddlStartYear = (DropDownList)item.FindControl("ddlStartYear");
-                var ddlEndMonth = (DropDownList)item.FindControl("ddlEndMonth");
-                var ddlEndYear = (DropDownList)item.FindControl("ddlEndYear");
-                var txtLocation = (TextBox)item.FindControl("txtLocation");
-                var txtDescription = (TextBox)item.FindControl("txtDescription");
+                RepeaterItem item = rptEmployment.Items[i];
+
+                TextBox txtCompany = (TextBox)item.FindControl("txtCompany");
+                TextBox txtTitle = (TextBox)item.FindControl("txtTitle");
+                DropDownList ddlEmployment = (DropDownList)item.FindControl("ddlEmployment");
+                DropDownList ddlStartMonth = (DropDownList)item.FindControl("ddlStartMonth");
+                DropDownList ddlStartYear = (DropDownList)item.FindControl("ddlStartYear");
+                DropDownList ddlEndMonth = (DropDownList)item.FindControl("ddlEndMonth");
+                DropDownList ddlEndYear = (DropDownList)item.FindControl("ddlEndYear");
+                TextBox txtLocation = (TextBox)item.FindControl("txtLocation");
+                TextBox txtDescription = (TextBox)item.FindControl("txtDescription");
 
                 if (i < EmploymentEntries.Count)
                 {
@@ -190,7 +250,9 @@ namespace ATS_friendly_Resume_Maker
             rptEmployment.DataSource = EmploymentEntries;
             rptEmployment.DataBind();
         }
+        #endregion
 
+        #region Education Methods
         protected void btnAddEducation_Click(object sender, EventArgs e)
         {
             SaveEducationValues();
@@ -216,42 +278,61 @@ namespace ATS_friendly_Resume_Maker
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
-                var entry = (EducationData)e.Item.DataItem;
-                InitializeEducationItem(e, entry);
+                DropDownList ddlStartYear = (DropDownList)e.Item.FindControl("ddlStartYear");
+                DropDownList ddlEndYear = (DropDownList)e.Item.FindControl("ddlEndYear");
+
+                // Fill years
+                int currentYear = DateTime.Now.Year;
+                for (int year = currentYear; year >= currentYear - 50; year--)
+                {
+                    ddlStartYear.Items.Add(new ListItem(year.ToString(), year.ToString()));
+                    ddlEndYear.Items.Add(new ListItem(year.ToString(), year.ToString()));
+                }
+
+                // Add "Present" option to end year
+                ddlEndYear.Items.Add(new ListItem("Present", "0"));
+
+                // Set selected values if data exists
+                EducationData entry = (EducationData)e.Item.DataItem;
+                if (entry != null)
+                {
+                    TextBox txtSchool = (TextBox)e.Item.FindControl("txtSchool");
+                    TextBox txtDegree = (TextBox)e.Item.FindControl("txtDegree");
+                    TextBox txtCity = (TextBox)e.Item.FindControl("txtCity");
+                    TextBox txtEduDescription = (TextBox)e.Item.FindControl("txtEduDescription");
+
+                    txtSchool.Text = entry.School;
+                    txtDegree.Text = entry.Degree;
+                    if (entry.StartYear > 0)
+                    {
+                        ddlStartYear.SelectedValue = entry.StartYear.ToString();
+                    }
+                    if (entry.EndYear > 0)
+                    {
+                        ddlEndYear.SelectedValue = entry.EndYear.ToString();
+                    }
+                    else if (entry.EndYear == 0) // "Present"
+                    {
+                        ddlEndYear.SelectedValue = "0";
+                    }
+                    txtCity.Text = entry.City;
+                    txtEduDescription.Text = entry.Description;
+                }
             }
-        }
-
-        private void InitializeEducationItem(RepeaterItemEventArgs e, EducationData entry)
-        {
-            var ddlStartYear = (DropDownList)e.Item.FindControl("ddlStartYear");
-            var ddlEndYear = (DropDownList)e.Item.FindControl("ddlEndYear");
-
-            PopulateYearDropdowns(ddlStartYear, ddlEndYear);
-
-            var txtSchool = (TextBox)e.Item.FindControl("txtSchool");
-            var txtDegree = (TextBox)e.Item.FindControl("txtDegree");
-            var txtCity = (TextBox)e.Item.FindControl("txtCity");
-            var txtEduDescription = (TextBox)e.Item.FindControl("txtEduDescription");
-
-            txtSchool.Text = entry.School;
-            txtDegree.Text = entry.Degree;
-            ddlStartYear.SelectedValue = entry.StartYear.ToString();
-            ddlEndYear.SelectedValue = entry.EndYear.ToString() == "0" ? "0" : entry.EndYear.ToString();
-            txtCity.Text = entry.City;
-            txtEduDescription.Text = entry.Description;
         }
 
         private void SaveEducationValues()
         {
             for (int i = 0; i < rptEducation.Items.Count; i++)
             {
-                var item = rptEducation.Items[i];
-                var txtSchool = (TextBox)item.FindControl("txtSchool");
-                var txtDegree = (TextBox)item.FindControl("txtDegree");
-                var ddlStartYear = (DropDownList)item.FindControl("ddlStartYear");
-                var ddlEndYear = (DropDownList)item.FindControl("ddlEndYear");
-                var txtCity = (TextBox)item.FindControl("txtCity");
-                var txtEduDescription = (TextBox)item.FindControl("txtEduDescription");
+                RepeaterItem item = rptEducation.Items[i];
+
+                TextBox txtSchool = (TextBox)item.FindControl("txtSchool");
+                TextBox txtDegree = (TextBox)item.FindControl("txtDegree");
+                DropDownList ddlStartYear = (DropDownList)item.FindControl("ddlStartYear");
+                DropDownList ddlEndYear = (DropDownList)item.FindControl("ddlEndYear");
+                TextBox txtCity = (TextBox)item.FindControl("txtCity");
+                TextBox txtEduDescription = (TextBox)item.FindControl("txtEduDescription");
 
                 if (i < EducationEntries.Count)
                 {
@@ -270,9 +351,9 @@ namespace ATS_friendly_Resume_Maker
             rptEducation.DataSource = EducationEntries;
             rptEducation.DataBind();
         }
+        #endregion
 
-
-
+        #region Links Methods
         protected void btnAddWebsite_Click(object sender, EventArgs e)
         {
             SaveLinkValues();
@@ -284,9 +365,30 @@ namespace ATS_friendly_Resume_Maker
         {
             if (e.CommandName == "Remove")
             {
+                SaveLinkValues();
                 int index = Convert.ToInt32(e.CommandArgument);
-                LinkEntries.RemoveAt(index);
-                BindLinksRepeater();
+                if (index >= 0 && index < LinkEntries.Count)
+                {
+                    LinkEntries.RemoveAt(index);
+                    BindLinksRepeater();
+                }
+            }
+        }
+
+        private void SaveLinkValues()
+        {
+            for (int i = 0; i < rptLinks.Items.Count; i++)
+            {
+                RepeaterItem item = rptLinks.Items[i];
+
+                TextBox txtLabel = (TextBox)item.FindControl("txtLabel");
+                TextBox txtUrl = (TextBox)item.FindControl("txtUrl");
+
+                if (i < LinkEntries.Count)
+                {
+                    LinkEntries[i].Label = txtLabel.Text;
+                    LinkEntries[i].Url = txtUrl.Text;
+                }
             }
         }
 
@@ -303,31 +405,14 @@ namespace ATS_friendly_Resume_Maker
             }
         }
 
-        private void SaveLinkValues()
-        {
-            List<LinkData> currentLinks = new List<LinkData>();
-            foreach (RepeaterItem item in rptLinks.Items)
-            {
-                var txtLabel = (TextBox)item.FindControl("txtLabel");
-                var txtUrl = (TextBox)item.FindControl("txtUrl");
-
-                currentLinks.Add(new LinkData
-                {
-                    Label = txtLabel.Text,
-                    Url = txtUrl.Text
-                });
-            }
-            LinkEntries = currentLinks;
-        }
-
         private void BindLinksRepeater()
         {
             rptLinks.DataSource = LinkEntries;
             rptLinks.DataBind();
         }
+        #endregion
 
-
-
+        #region Skills Methods
         protected void btnAddSkills_Click(object sender, EventArgs e)
         {
             SaveSkillValues();
@@ -351,19 +436,17 @@ namespace ATS_friendly_Resume_Maker
 
         private void SaveSkillValues()
         {
-            List<SkillData> currentSkills = new List<SkillData>();
-
             for (int i = 0; i < rptSkills.Items.Count; i++)
             {
-                var item = rptSkills.Items[i];
-                var txtSkill = (TextBox)item.FindControl("txtSkill");
+                RepeaterItem item = rptSkills.Items[i];
 
-                currentSkills.Add(new SkillData
+                TextBox txtSkill = (TextBox)item.FindControl("txtSkill");
+
+                if (i < SkillEntries.Count)
                 {
-                    Skill = txtSkill.Text
-                });
+                    SkillEntries[i].Skill = txtSkill.Text;
+                }
             }
-            SkillEntries = currentSkills;
         }
 
         private void BindSkillsRepeater()
@@ -371,7 +454,7 @@ namespace ATS_friendly_Resume_Maker
             rptSkills.DataSource = SkillEntries;
             rptSkills.DataBind();
         }
-
+        #endregion
 
         private void BindAllRepeaters()
         {
@@ -383,11 +466,13 @@ namespace ATS_friendly_Resume_Maker
 
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
+            // Save all values first
             SaveEmploymentValues();
             SaveEducationValues();
             SaveLinkValues();
             SaveSkillValues();
 
+            // Generate resume and redirect to result page
             Session["EmploymentEntries"] = EmploymentEntries;
             Session["EducationEntries"] = EducationEntries;
             Session["LinkEntries"] = LinkEntries;
