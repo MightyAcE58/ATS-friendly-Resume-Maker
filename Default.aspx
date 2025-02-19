@@ -40,7 +40,7 @@
                  <h1>Build Your Outstanding Resume With <span>Resume<b style="color: rgb(199, 56, 255);">Pro</b></span></h1>
                  <p>We make Resume that make you stand out  </p>
                  <div class="d-flex">
-                     <a href="#about" class="btn-get-started">Get Started</a>
+                     <a href="form.aspx" class="btn-get-started">Get Started</a>
                      <!--important-->
                      <div class="glightbox btn-watch-video d-flex align-items-center"></div>
                  </div>

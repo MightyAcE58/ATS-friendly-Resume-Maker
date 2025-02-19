@@ -51,7 +51,7 @@ namespace ATS_friendly_Resume_Maker
                 conn.Open();
 
                 // Check if the email already exists
-                string checkQuery = "SELECT COUNT(*) FROM TestUsers WHERE email = @Email";
+                string checkQuery = "SELECT COUNT(*) FROM Users WHERE email = @Email";
                 using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn))
                 {
                     checkCmd.Parameters.AddWithValue("@Email", txtRegEmail.Text);
@@ -66,7 +66,7 @@ namespace ATS_friendly_Resume_Maker
                 }
 
                 // Proceed with insertion if email does not exist
-                string query = "INSERT INTO TestUsers (firstName, lastName, email, password) VALUES (@FirstName, @LastName, @Email, @Password)";
+                string query = "INSERT INTO Users (firstName, lastName, email, password) VALUES (@FirstName, @LastName, @Email, @Password)";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {

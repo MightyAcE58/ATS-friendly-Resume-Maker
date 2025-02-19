@@ -49,7 +49,7 @@ namespace ATS_friendly_Resume_Maker
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                string query = "SELECT FirstName, LastName FROM TestUsers WHERE Email = @Email AND Password = @Password";
+                string query = "SELECT FirstName, LastName FROM Users WHERE Email = @Email AND Password = @Password";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {

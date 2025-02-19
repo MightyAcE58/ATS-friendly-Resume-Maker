@@ -392,6 +392,14 @@ namespace ATS_friendly_Resume_Maker
             }
         }
 
+
+        private void BindLinksRepeater()
+        {
+            rptLinks.DataSource = LinkEntries;
+            rptLinks.DataBind();
+        }
+        #endregion
+
         protected void rptLinks_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
@@ -405,63 +413,12 @@ namespace ATS_friendly_Resume_Maker
             }
         }
 
-        private void BindLinksRepeater()
-        {
-            rptLinks.DataSource = LinkEntries;
-            rptLinks.DataBind();
-        }
-        #endregion
-
-        #region Skills Methods
-        protected void btnAddSkills_Click(object sender, EventArgs e)
-        {
-            SaveSkillValues();
-            SkillEntries.Add(new SkillData());
-            BindSkillsRepeater();
-        }
-
-        protected void rptSkills_ItemCommand(object source, RepeaterCommandEventArgs e)
-        {
-            if (e.CommandName == "Remove")
-            {
-                SaveSkillValues();
-                int index = Convert.ToInt32(e.CommandArgument);
-                if (index >= 0 && index < SkillEntries.Count)
-                {
-                    SkillEntries.RemoveAt(index);
-                    BindSkillsRepeater();
-                }
-            }
-        }
-
-        private void SaveSkillValues()
-        {
-            for (int i = 0; i < rptSkills.Items.Count; i++)
-            {
-                RepeaterItem item = rptSkills.Items[i];
-
-                TextBox txtSkill = (TextBox)item.FindControl("txtSkill");
-
-                if (i < SkillEntries.Count)
-                {
-                    SkillEntries[i].Skill = txtSkill.Text;
-                }
-            }
-        }
-
-        private void BindSkillsRepeater()
-        {
-            rptSkills.DataSource = SkillEntries;
-            rptSkills.DataBind();
-        }
-        #endregion
-
         private void BindAllRepeaters()
         {
             BindEmploymentRepeater();
             BindEducationRepeater();
             BindLinksRepeater();
-            BindSkillsRepeater();
+
         }
 
         protected void btnSubmit_Click(object sender, EventArgs e)
@@ -470,13 +427,13 @@ namespace ATS_friendly_Resume_Maker
             SaveEmploymentValues();
             SaveEducationValues();
             SaveLinkValues();
-            SaveSkillValues();
+
 
             // Generate resume and redirect to result page
             Session["EmploymentEntries"] = EmploymentEntries;
             Session["EducationEntries"] = EducationEntries;
             Session["LinkEntries"] = LinkEntries;
-            Session["SkillEntries"] = SkillEntries;
+
 
             Response.Redirect("ResumeResult.aspx");
         }
