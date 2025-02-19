@@ -9,33 +9,38 @@
     <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #343541 !important;
+            background-color: #ffffff;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' %3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%23000000'/%3E%3Cstop offset='1' stop-color='%238C0394'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpattern id='b' width='24' height='24' patternUnits='userSpaceOnUse'%3E%3Ccircle fill='%23ffffff' cx='12' cy='12' r='12'/%3E%3C/pattern%3E%3Crect width='100%25' height='100%25' fill='url(%23a)'/%3E%3Crect width='100%25' height='100%25' fill='url(%23b)' fill-opacity='0.1'/%3E%3C/svg%3E");
+            background-attachment: fixed;
         }
+
         /* Container Styles */
         .form-container {
             margin: 20px auto;
             padding: 25px;
             max-width: 850px;
             border-radius: 12px;
-            background-color: #f9f9f9;
             box-shadow: 0 10px 30px rgba(177, 130, 242, 1);
             border: 1px solid #ddd;
             transition: all 0.3s ease;
             font-family: "Raleway", serif;
+            background-color: #333333;
+            border-color: #777777;
+            color: white;
+            border-style: none !important;
         }
 
             .form-container:hover {
-                box-shadow: 0 8px 20px rgba(131, 73, 196, 1);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
             }
 
         label {
             font-weight: 600;
             font-size: 14px;
-            color: #333;
+            color: white;
             margin-bottom: 8px;
             display: block;
             transition: color 0.3s ease;
-            font-family: "Raleway", serif;
         }
 
         .form-container input,
@@ -47,7 +52,8 @@
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 16px;
-            background-color: #fff;
+            background-color: #e0e0e0;
+            color: black;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
@@ -67,29 +73,36 @@
 
             .form-container button:hover,
             .form-container .btn:hover {
-                background-color: #8349c4;
+                background-color: #814dc2 !important;
             }
 
         .employment-entry, .education-entry, .link-entry, .skill-entry {
             margin-bottom: 20px;
             padding: 15px;
-            border: 1px solid #ddd;
+            border: 0px solid #ddd;
             border-radius: 8px;
-            background-color: #fff;
+            background-color: #2e2e2e;
+            color: white;
         }
 
         .btn-remove {
-            background-color: #dc3545 !important;
-            margin-left: 1rem !important;
+            background-color: #ff7043 !important;
+            margin-left: 462px !important;
+            padding: 5px 1.5rem !important;
+            font-size: 1rem !important;
+            border-radius: 50px !important;
+            color: white !important;
+            border-style: none !important;
         }
 
             .btn-remove:hover {
-                background-color: #c82333 !important;
+                background-color: #e64a19 !important;
             }
 
         .date-container, .years-container {
             display: flex;
             gap: 10px;
+            color: #b3b3b3;
         }
 
         .action-buttons {
@@ -104,9 +117,12 @@
                 min-width: 200px;
             }
 
-
-        .no-resize {
-            resize: none !important;
+        .decor {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            white-space: nowrap;
+            color: #ae74fa;
         }
     </style>
 
@@ -156,7 +172,12 @@
                         <asp:Repeater ID="rptEmployment" runat="server" OnItemCommand="rptEmployment_ItemCommand" OnItemDataBound="rptEmployment_ItemDataBound">
                             <ItemTemplate>
                                 <div class="employment-entry">
-                                    <h3>Employment Information</h3>
+                                    <div class="decor">
+                                        <h3>Employment Information</h3>
+
+                                        <asp:Button ID="btnRemove" runat="server" Text="Remove" CssClass="btn-remove"
+                                            CommandName="Remove" CommandArgument="<%# Container.ItemIndex %>" />
+                                    </div>
 
                                     <label for="txtCompany">Company Name:</label>
                                     <asp:TextBox ID="txtCompany" runat="server" placeholder="Enter company name"></asp:TextBox>
@@ -222,8 +243,6 @@
                                     <asp:TextBox ID="txtDescription" runat="server" CssClass="form-control no-resize" TextMode="MultiLine" Rows="4"
                                         placeholder="Describe your responsibilities and achievements"></asp:TextBox>
 
-                                    <asp:Button ID="btnRemove" runat="server" Text="Remove" CssClass="btn-remove"
-                                        CommandName="Remove" CommandArgument="<%# Container.ItemIndex %>" />
                                 </div>
                             </ItemTemplate>
                         </asp:Repeater>
@@ -232,7 +251,14 @@
                         <asp:Repeater ID="rptEducation" runat="server" OnItemCommand="rptEducation_ItemCommand" OnItemDataBound="rptEducation_ItemDataBound">
                             <ItemTemplate>
                                 <div class="education-entry">
-                                    <h3>Education Information</h3>
+                                    <div class="decor">
+
+                                        <h3>Education Information</h3>
+
+                                        <asp:Button ID="btnRemove" runat="server" Text="Remove" CssClass="btn-remove"
+                                            CommandName="Remove" CommandArgument="<%# Container.ItemIndex %>" />
+
+                                    </div>
 
                                     <label for="txtSchool">School Name:</label>
                                     <asp:TextBox ID="txtSchool" runat="server" placeholder="Enter school name"></asp:TextBox>
@@ -256,8 +282,6 @@
                                     <asp:TextBox ID="txtEduDescription" runat="server" CssClass="form-control no-resize" TextMode="MultiLine" Rows="4"
                                         placeholder="Describe your studies, achievements, activities"></asp:TextBox>
 
-                                    <asp:Button ID="btnRemove" runat="server" Text="Remove" CssClass="btn-remove"
-                                        CommandName="Remove" CommandArgument="<%# Container.ItemIndex %>" />
                                 </div>
                             </ItemTemplate>
                         </asp:Repeater>
@@ -266,16 +290,19 @@
                         <asp:Repeater ID="rptLinks" runat="server" OnItemCommand="rptLinks_ItemCommand" OnItemDataBound="rptLinks_ItemDataBound">
                             <ItemTemplate>
                                 <div class="link-entry">
-                                    <h3>Website/Link Information</h3>
+                                    <div class="decor">
+
+                                        <h3>Website/Link Information</h3>
+
+                                        <asp:Button ID="btnRemove" runat="server" Text="Remove" CssClass="btn-remove"
+                                            CommandName="Remove" CommandArgument="<%# Container.ItemIndex %>" />
+                                    </div>
 
                                     <label for="txtLabel">Label:</label>
                                     <asp:TextBox ID="txtLabel" runat="server" placeholder="Enter label (e.g., Portfolio, LinkedIn)"></asp:TextBox>
 
                                     <label for="txtUrl">URL:</label>
                                     <asp:TextBox ID="txtUrl" runat="server" placeholder="Enter URL"></asp:TextBox>
-
-                                    <asp:Button ID="btnRemove" runat="server" Text="Remove" CssClass="btn-remove"
-                                        CommandName="Remove" CommandArgument="<%# Container.ItemIndex %>" />
                                 </div>
                             </ItemTemplate>
                         </asp:Repeater>

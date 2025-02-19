@@ -49,7 +49,7 @@ namespace ATS_friendly_Resume_Maker
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                string query = "SELECT FirstName, LastName FROM Users WHERE Email = @Email AND Password = @Password";
+                string query = "SELECT UserId, FirstName, LastName FROM Users WHERE Email = @Email AND Password = @Password";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -60,6 +60,7 @@ namespace ATS_friendly_Resume_Maker
                     {
                         if (reader.Read()) // ✅ Ensures data is available
                         {
+                            Session["UserId"] = reader["UserId"].ToString();
                             Session["UserEmail"] = txtEmail.Text;
                             Session["UserFirstName"] = reader["FirstName"].ToString(); // ✅ Match exact column case
                             Session["UserLastName"] = reader["LastName"].ToString();

@@ -4,6 +4,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Linq;
+using System.Configuration;
+using System.Data.SqlClient;
 
 namespace ATS_friendly_Resume_Maker
 {
@@ -47,7 +49,6 @@ namespace ATS_friendly_Resume_Maker
 
     public partial class Resume_Maker : System.Web.UI.Page
     {
-
         private List<EmploymentData> EmploymentEntries
         {
             get
@@ -118,8 +119,118 @@ namespace ATS_friendly_Resume_Maker
             {
                 InitializeYearDropdowns();
                 BindAllRepeaters();
+
+                int userId = GetUserId(); // Fetch the UserId from Session
+
+                if (userId > 0)
+                {
+                    LoadEmploymentData(userId);
+                    LoadEducationData(userId);
+                    LoadLinkData(userId);
+                }
+            }
+
+            if (Session["UserId"] == null)
+            {
+                // Redirect to login page if session expires
+                Response.Redirect("Login.aspx");
+                return;
             }
         }
+
+        private void LoadEmploymentData(int userId)
+        {
+            EmploymentEntries.Clear(); // Clear old data
+
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString))
+            {
+                con.Open();
+                string query = "SELECT ExperienceID, CompanyName, JobTitle, EmploymentType, StartMonth, StartYear, EndMonth, EndYear, Location, Description FROM Experience WHERE UserID = @UserId";
+
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            EmploymentEntries.Add(new EmploymentData()
+                            {
+                                Company = reader["CompanyName"].ToString(),
+                                Title = reader["JobTitle"].ToString(),
+                                EmploymentType = reader["EmploymentType"] != DBNull.Value ? reader["EmploymentType"].ToString() : "",
+                                StartMonth = reader["StartMonth"] != DBNull.Value ? Convert.ToInt32(reader["StartMonth"]) : 0,
+                                StartYear = reader["StartYear"] != DBNull.Value ? Convert.ToInt32(reader["StartYear"]) : 0,
+                                EndMonth = reader["EndMonth"] != DBNull.Value ? Convert.ToInt32(reader["EndMonth"]) : 0,
+                                EndYear = reader["EndYear"] != DBNull.Value ? Convert.ToInt32(reader["EndYear"]) : 0,
+                                Location = reader["Location"] != DBNull.Value ? reader["Location"].ToString() : "",
+                                Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : ""
+                            });
+                        }
+                    }
+                }
+            }
+
+            // Bind data to UI elements like Repeater/GridView if required
+        }
+        private void LoadEducationData(int userId)
+        {
+            EducationEntries.Clear();
+
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString))
+            {
+                con.Open();
+                string query = "SELECT SchoolName, Degree, StartYear, EndYear, City, Description FROM Education WHERE UserID = @UserId";
+
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            EducationEntries.Add(new EducationData()
+                            {
+                                School = reader["SchoolName"].ToString(),
+                                Degree = reader["Degree"].ToString(),
+                                StartYear = Convert.ToInt32(reader["StartYear"]),
+                                EndYear = Convert.ToInt32(reader["EndYear"]),
+                                City = reader["City"].ToString(),
+                                Description = reader["Description"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+        }
+        private void LoadLinkData(int userId)
+        {
+            LinkEntries.Clear();
+
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString))
+            {
+                con.Open();
+                string query = "SELECT Label, Url FROM Links WHERE UserID = @UserId";
+
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            LinkEntries.Add(new LinkData()
+                            {
+                                Label = reader["Label"].ToString(),
+                                Url = reader["Url"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+
 
         private void InitializeYearDropdowns()
         {
@@ -149,6 +260,8 @@ namespace ATS_friendly_Resume_Maker
                     EmploymentEntries.RemoveAt(index);
                     BindEmploymentRepeater();
                 }
+
+                
             }
         }
 
@@ -271,6 +384,7 @@ namespace ATS_friendly_Resume_Maker
                     EducationEntries.RemoveAt(index);
                     BindEducationRepeater();
                 }
+
             }
         }
 
@@ -421,21 +535,97 @@ namespace ATS_friendly_Resume_Maker
 
         }
 
+        private int GetUserId()
+        {
+            if (Session["UserId"] != null)
+            {
+                return Convert.ToInt32(Session["UserId"]);
+            }
+            else
+            {
+                Response.Redirect("Login.aspx"); // Redirect if session expires
+                return -1;
+            }
+        }
+
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
-            // Save all values first
-            SaveEmploymentValues();
+            SaveEmploymentValues();  // Save UI values first
             SaveEducationValues();
             SaveLinkValues();
 
+            int userId = GetUserId(); // Get UserId from Session
 
-            // Generate resume and redirect to result page
-            Session["EmploymentEntries"] = EmploymentEntries;
-            Session["EducationEntries"] = EducationEntries;
-            Session["LinkEntries"] = LinkEntries;
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString))
+            {
+                con.Open();
+
+                // Insert Employment Data
+                foreach (var emp in EmploymentEntries)
+                {
+                    string query = @"INSERT INTO Experience 
+        (UserID, CompanyName, JobTitle, EmploymentType, StartMonth, StartYear, EndMonth, EndYear, Location, Description) 
+        VALUES (@UserId, @CompanyName, @JobTitle, @EmploymentType, @StartMonth, @StartYear, @EndMonth, @EndYear, @Location, @Description)";
+
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        cmd.Parameters.AddWithValue("@UserId", userId);
+                        cmd.Parameters.AddWithValue("@CompanyName", emp.Company ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@JobTitle", emp.Title ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@EmploymentType", string.IsNullOrEmpty(emp.EmploymentType) ? (object)DBNull.Value : emp.EmploymentType);
+
+                        cmd.Parameters.AddWithValue("@StartMonth", emp.StartMonth > 0 ? (object)emp.StartMonth : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@StartYear", emp.StartYear > 0 ? (object)emp.StartYear : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@EndMonth", emp.EndMonth > 0 ? (object)emp.EndMonth : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@EndYear", emp.EndYear > 0 ? (object)emp.EndYear : DBNull.Value);
+
+                        cmd.Parameters.AddWithValue("@Location", string.IsNullOrEmpty(emp.Location) ? (object)DBNull.Value : emp.Location);
+                        cmd.Parameters.AddWithValue("@Description", string.IsNullOrEmpty(emp.Description) ? (object)DBNull.Value : emp.Description);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
 
 
-            Response.Redirect("ResumeResult.aspx");
+                // Insert Education Data
+                foreach (var edu in EducationEntries)
+                {
+                    string query = @"INSERT INTO Education 
+(UserId, SchoolName, Degree, StartYear, EndYear, City, Description) 
+VALUES (@UserId, @SchoolName, @Degree, @StartYear, @EndYear, @City, @Description)";
+
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        cmd.Parameters.AddWithValue("@UserId", userId);
+                        cmd.Parameters.AddWithValue("@SchoolName", edu.School ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@Degree", edu.Degree ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@StartYear", edu.StartYear > 0 ? (object)edu.StartYear : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@EndYear", edu.EndYear > 0 ? (object)edu.EndYear : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@City", string.IsNullOrEmpty(edu.City) ? (object)DBNull.Value : edu.City);
+                        cmd.Parameters.AddWithValue("@Description", string.IsNullOrEmpty(edu.Description) ? (object)DBNull.Value : edu.Description);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+
+                // Insert Links Data
+                foreach (var link in LinkEntries)
+                {
+                    string query = "INSERT INTO Links (UserId, Label, URL) VALUES (@UserId, @Label, @Url)";
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        cmd.Parameters.AddWithValue("@UserId", userId);
+                        cmd.Parameters.AddWithValue("@Label", link.Label);
+                        cmd.Parameters.AddWithValue("@URL", link.Url);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+
+            // Redirect to resume result page
+            Response.Redirect("Default.aspx");
         }
     }
 }

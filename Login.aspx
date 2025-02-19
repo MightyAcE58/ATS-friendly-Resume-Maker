@@ -15,10 +15,11 @@
         body {
             height: 100%;
         }
-        .bg-body-tertiary{
-            background-color: #343541 !important;
 
+        .bg-body-tertiary {
+            background-color: #343541 !important;
         }
+
         .form-signin {
             max-width: 330px;
             padding: 1rem;
@@ -39,13 +40,23 @@
                 border-top-left-radius: 0;
                 border-top-right-radius: 0;
             }
+
+        .btn-purple {
+            background-color: #9a60e6 !important;
+            color: white !important;
+            border: none;
+        }
+
+            .btn-purple:hover {
+                background-color: #844ec4 !important;
+            }
     </style>
 </head>
 <body class="d-flex align-items-center py-4 bg-body-tertiary">
     <form id="form1" runat="server" class="form-signin w-100 m-auto">
         <div class="text-center">
             <img class="mb-4" src="/assets/img/logo-nobg.png" alt="" width="300" height="67">
-            <h1 class="h3 mb-3 fw-normal text-white">Please sign in</h1>
+            <h1 class="h3 mb-3 fw-normal text-white">Sign In</h1>
         </div>
 
         <div class="form-floating">
@@ -63,11 +74,11 @@
             <label for="txtPassword">Password</label>
         </div>
 
-            <div class="form-floating">
-                <asp:Label ID="lblStatus" runat="server" ForeColor="Red"></asp:Label>
-            </div>
+        <div class="form-floating">
+            <asp:Label ID="lblStatus" runat="server" ForeColor="Red"></asp:Label>
+        </div>
 
-        <asp:Button ID="btnSignIn" runat="server" CssClass="btn btn-primary w-100 py-2" Text="Sign in" OnClick="btnSignIn_Click" />
+        <asp:Button ID="btnSignIn" runat="server" CssClass="btn btn-purple w-100 py-2" Text="Sign in" OnClick="btnSignIn_Click" />
 
         <div class="text-center mt-4">
             <p class="fw-medium text-secondary">

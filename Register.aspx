@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Register.aspx.cs" Inherits="ATS_friendly_Resume_Maker.Register" %>
+﻿﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Register.aspx.cs" Inherits="ATS_friendly_Resume_Maker.Register" %>
 
 <!DOCTYPE html>
 
@@ -99,4 +99,3 @@
 
 </body>
 </html>
-
