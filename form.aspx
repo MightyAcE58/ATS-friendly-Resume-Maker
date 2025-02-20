@@ -147,6 +147,9 @@
                         <label for="txtPhone" class="form-label mt-2">Phone:</label>
                         <asp:TextBox ID="txtPhone" runat="server" CssClass="form-control" placeholder="Enter your phone number"></asp:TextBox>
 
+                        <label for="txtCountry" class="form-label mt-2">Country:</label>
+                        <asp:TextBox ID="txtCountry" runat="server" CssClass="form-control" placeholder="Country"></asp:TextBox>
+
                         <label for="txtSummary" class="form-label mt-2">Summary:</label>
                         <asp:TextBox ID="txtSummary" runat="server" CssClass="form-control no-resize" TextMode="MultiLine" Rows="5"
                             placeholder="Briefly describe yourself"></asp:TextBox>

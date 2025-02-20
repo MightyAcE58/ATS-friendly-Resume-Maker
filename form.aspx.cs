@@ -12,6 +12,7 @@ namespace ATS_friendly_Resume_Maker
     [Serializable]
     public class EmploymentData
     {
+        public int ExperienceID { get; set; }
         public string Company { get; set; }
         public string Title { get; set; }
         public string EmploymentType { get; set; }
@@ -26,6 +27,7 @@ namespace ATS_friendly_Resume_Maker
     [Serializable]
     public class EducationData
     {
+        public int EducationID { get; set; }
         public string School { get; set; }
         public string Degree { get; set; }
         public int StartYear { get; set; }
@@ -37,8 +39,10 @@ namespace ATS_friendly_Resume_Maker
     [Serializable]
     public class LinkData
     {
+        public int LinkID { get; set; }
         public string Label { get; set; }
         public string Url { get; set; }
+
     }
 
     [Serializable]
@@ -119,6 +123,7 @@ namespace ATS_friendly_Resume_Maker
             {
                 InitializeYearDropdowns();
                 BindAllRepeaters();
+                LoadUserData();
 
                 int userId = GetUserId(); // Fetch the UserId from Session
 
@@ -138,9 +143,50 @@ namespace ATS_friendly_Resume_Maker
             }
         }
 
+        private void LoadUserData()
+        {
+            int userId = Convert.ToInt32(Session["UserId"]);
+
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString))
+            {
+                conn.Open();
+
+                // Retrieve User Details
+                string getUserQuery = "SELECT FullName, Email, PhoneNumber, Summary, Country FROM UserDetail WHERE UserId = @UserId";
+                using (SqlCommand cmd = new SqlCommand(getUserQuery, conn))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read()) // If data exists
+                    {
+                        txtFullName.Text = reader["FullName"].ToString();
+                        txtEmail.Text = reader["Email"].ToString();
+                        txtPhone.Text = reader["PhoneNumber"].ToString();
+                        txtSummary.Text = reader["Summary"].ToString();
+                        txtCountry.Text = reader["Country"].ToString();
+                    }
+                    reader.Close();
+                }
+
+                // Retrieve Skills
+                string getSkillsQuery = "SELECT SkillsText FROM Skills WHERE UserID = @UserId";
+                using (SqlCommand cmd = new SqlCommand(getSkillsQuery, conn))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read()) // If data exists
+                    {
+                        txtskill.Text = reader["SkillsText"].ToString();
+                    }
+                }
+            }
+        }
+
         private void LoadEmploymentData(int userId)
         {
-            EmploymentEntries.Clear(); // Clear old data
+            EmploymentEntries.Clear();
 
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString))
             {
@@ -156,23 +202,24 @@ namespace ATS_friendly_Resume_Maker
                         {
                             EmploymentEntries.Add(new EmploymentData()
                             {
-                                Company = reader["CompanyName"].ToString(),
-                                Title = reader["JobTitle"].ToString(),
-                                EmploymentType = reader["EmploymentType"] != DBNull.Value ? reader["EmploymentType"].ToString() : "",
+                                ExperienceID = Convert.ToInt32(reader["ExperienceID"]), // Assign ExperienceID
+                                Company = reader["CompanyName"]?.ToString(),
+                                Title = reader["JobTitle"]?.ToString(),
+                                EmploymentType = reader["EmploymentType"]?.ToString(),
                                 StartMonth = reader["StartMonth"] != DBNull.Value ? Convert.ToInt32(reader["StartMonth"]) : 0,
                                 StartYear = reader["StartYear"] != DBNull.Value ? Convert.ToInt32(reader["StartYear"]) : 0,
                                 EndMonth = reader["EndMonth"] != DBNull.Value ? Convert.ToInt32(reader["EndMonth"]) : 0,
                                 EndYear = reader["EndYear"] != DBNull.Value ? Convert.ToInt32(reader["EndYear"]) : 0,
-                                Location = reader["Location"] != DBNull.Value ? reader["Location"].ToString() : "",
-                                Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : ""
+                                Location = reader["Location"]?.ToString(),
+                                Description = reader["Description"]?.ToString()
                             });
                         }
                     }
                 }
             }
-
-            // Bind data to UI elements like Repeater/GridView if required
         }
+
+
         private void LoadEducationData(int userId)
         {
             EducationEntries.Clear();
@@ -180,7 +227,7 @@ namespace ATS_friendly_Resume_Maker
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString))
             {
                 con.Open();
-                string query = "SELECT SchoolName, Degree, StartYear, EndYear, City, Description FROM Education WHERE UserID = @UserId";
+                string query = "SELECT EducationID, SchoolName, Degree, StartYear, EndYear, City, Description FROM Education WHERE UserID = @UserId";
 
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
@@ -191,6 +238,7 @@ namespace ATS_friendly_Resume_Maker
                         {
                             EducationEntries.Add(new EducationData()
                             {
+                                EducationID = Convert.ToInt32(reader["EducationID"]),
                                 School = reader["SchoolName"].ToString(),
                                 Degree = reader["Degree"].ToString(),
                                 StartYear = Convert.ToInt32(reader["StartYear"]),
@@ -203,6 +251,7 @@ namespace ATS_friendly_Resume_Maker
                 }
             }
         }
+
         private void LoadLinkData(int userId)
         {
             LinkEntries.Clear();
@@ -210,7 +259,7 @@ namespace ATS_friendly_Resume_Maker
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString))
             {
                 con.Open();
-                string query = "SELECT Label, Url FROM Links WHERE UserID = @UserId";
+                string query = "SELECT LinkID, Label, Url FROM Links WHERE UserID = @UserId";
 
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
@@ -221,6 +270,7 @@ namespace ATS_friendly_Resume_Maker
                         {
                             LinkEntries.Add(new LinkData()
                             {
+                                LinkID = Convert.ToInt32(reader["LinkID"]),
                                 Label = reader["Label"].ToString(),
                                 Url = reader["Url"].ToString()
                             });
@@ -229,8 +279,6 @@ namespace ATS_friendly_Resume_Maker
                 }
             }
         }
-
-
 
         private void InitializeYearDropdowns()
         {
@@ -251,17 +299,34 @@ namespace ATS_friendly_Resume_Maker
 
         protected void rptEmployment_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
+
             if (e.CommandName == "Remove")
             {
-                SaveEmploymentValues();
+                SaveEmploymentValues(); // Ensure values are saved before deletion
+
                 int index = Convert.ToInt32(e.CommandArgument);
                 if (index >= 0 && index < EmploymentEntries.Count)
                 {
-                    EmploymentEntries.RemoveAt(index);
-                    BindEmploymentRepeater();
-                }
+                    int experienceId = EmploymentEntries[index].ExperienceID; // Get the ExperienceID
 
-                
+                    if (experienceId > 0) // Only delete if it exists in the database
+                    {
+                        using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString))
+                        {
+                            con.Open();
+                            string deleteQuery = "DELETE FROM Experience WHERE ExperienceID = @ExperienceID";
+
+                            using (SqlCommand cmd = new SqlCommand(deleteQuery, con))
+                            {
+                                cmd.Parameters.AddWithValue("@ExperienceID", experienceId);
+                                cmd.ExecuteNonQuery(); // Delete from database
+                            }
+                        }
+                    }
+
+                    EmploymentEntries.RemoveAt(index); // Remove from the list
+                    BindEmploymentRepeater(); // Refresh UI
+                }
             }
         }
 
@@ -377,15 +442,33 @@ namespace ATS_friendly_Resume_Maker
         {
             if (e.CommandName == "Remove")
             {
-                SaveEducationValues();
+                SaveEducationValues(); // Save current education values before removing
+
                 int index = Convert.ToInt32(e.CommandArgument);
                 if (index >= 0 && index < EducationEntries.Count)
                 {
-                    EducationEntries.RemoveAt(index);
-                    BindEducationRepeater();
-                }
+                    int educationId = EducationEntries[index].EducationID; // Get EducationID
 
+                    if (educationId > 0) // Delete only if it exists in the database
+                    {
+                        using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString))
+                        {
+                            con.Open();
+                            string deleteQuery = "DELETE FROM Education WHERE EducationID = @EducationID";
+
+                            using (SqlCommand cmd = new SqlCommand(deleteQuery, con))
+                            {
+                                cmd.Parameters.AddWithValue("@EducationID", educationId);
+                                cmd.ExecuteNonQuery(); // Delete from database
+                            }
+                        }
+                    }
+
+                    EducationEntries.RemoveAt(index); // Remove from the list
+                    BindEducationRepeater(); // Refresh UI
+                }
             }
+
         }
 
         protected void rptEducation_ItemDataBound(object sender, RepeaterItemEventArgs e)
@@ -479,14 +562,33 @@ namespace ATS_friendly_Resume_Maker
         {
             if (e.CommandName == "Remove")
             {
-                SaveLinkValues();
+                SaveLinkValues(); // Ensure current values are saved
+
                 int index = Convert.ToInt32(e.CommandArgument);
                 if (index >= 0 && index < LinkEntries.Count)
                 {
-                    LinkEntries.RemoveAt(index);
-                    BindLinksRepeater();
+                    int linkId = LinkEntries[index].LinkID; // Get LinkID
+
+                    if (linkId > 0) // Delete only if it exists in the database
+                    {
+                        using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString))
+                        {
+                            con.Open();
+                            string deleteQuery = "DELETE FROM Links WHERE LinkID = @LinkID";
+
+                            using (SqlCommand cmd = new SqlCommand(deleteQuery, con))
+                            {
+                                cmd.Parameters.AddWithValue("@LinkID", linkId);
+                                cmd.ExecuteNonQuery(); // Delete from database
+                            }
+                        }
+                    }
+
+                    LinkEntries.RemoveAt(index); // Remove from the list
+                    BindLinksRepeater(); // Refresh UI
                 }
             }
+
         }
 
         private void SaveLinkValues()
@@ -560,42 +662,60 @@ namespace ATS_friendly_Resume_Maker
             {
                 con.Open();
 
-                // Insert Employment Data
-                foreach (var emp in EmploymentEntries)
-                {
-                    string query = @"INSERT INTO Experience 
-        (UserID, CompanyName, JobTitle, EmploymentType, StartMonth, StartYear, EndMonth, EndYear, Location, Description) 
-        VALUES (@UserId, @CompanyName, @JobTitle, @EmploymentType, @StartMonth, @StartYear, @EndMonth, @EndYear, @Location, @Description)";
 
-                    using (SqlCommand cmd = new SqlCommand(query, con))
+
+                foreach (var entry in EmploymentEntries.Where(entry => entry.ExperienceID == 0)) // Use 'entry' instead of 'e'
+                {
+
+                    if (string.IsNullOrEmpty(entry.Company) || string.IsNullOrEmpty(entry.Title))
+                    {
+                        string script = "alert('Company Name and Job Title are required fields.');";
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "ValidationAlert", script, true);
+                        return; // Stop execution to prevent inserting invalid data
+                    }
+
+                    string insertQuery = @"INSERT INTO Experience 
+                (UserID, CompanyName, JobTitle, EmploymentType, StartMonth, StartYear, EndMonth, EndYear, Location, Description) 
+                OUTPUT INSERTED.ExperienceID VALUES (@UserId, @CompanyName, @JobTitle, @EmploymentType, @StartMonth, @StartYear, @EndMonth, @EndYear, @Location, @Description)";
+
+                    using (SqlCommand cmd = new SqlCommand(insertQuery, con))
                     {
                         cmd.Parameters.AddWithValue("@UserId", userId);
-                        cmd.Parameters.AddWithValue("@CompanyName", emp.Company ?? (object)DBNull.Value);
-                        cmd.Parameters.AddWithValue("@JobTitle", emp.Title ?? (object)DBNull.Value);
-                        cmd.Parameters.AddWithValue("@EmploymentType", string.IsNullOrEmpty(emp.EmploymentType) ? (object)DBNull.Value : emp.EmploymentType);
+                        cmd.Parameters.AddWithValue("@CompanyName", entry.Company ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@JobTitle", entry.Title ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@EmploymentType", string.IsNullOrEmpty(entry.EmploymentType) ? (object)DBNull.Value : entry.EmploymentType);
+                        cmd.Parameters.AddWithValue("@StartMonth", entry.StartMonth > 0 ? (object)entry.StartMonth : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@StartYear", entry.StartYear > 0 ? (object)entry.StartYear : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@EndMonth", entry.EndMonth > 0 ? (object)entry.EndMonth : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@EndYear", entry.EndYear > 0 ? (object)entry.EndYear : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@Location", string.IsNullOrEmpty(entry.Location) ? (object)DBNull.Value : entry.Location);
+                        cmd.Parameters.AddWithValue("@Description", string.IsNullOrEmpty(entry.Description) ? (object)DBNull.Value : entry.Description);
 
-                        cmd.Parameters.AddWithValue("@StartMonth", emp.StartMonth > 0 ? (object)emp.StartMonth : DBNull.Value);
-                        cmd.Parameters.AddWithValue("@StartYear", emp.StartYear > 0 ? (object)emp.StartYear : DBNull.Value);
-                        cmd.Parameters.AddWithValue("@EndMonth", emp.EndMonth > 0 ? (object)emp.EndMonth : DBNull.Value);
-                        cmd.Parameters.AddWithValue("@EndYear", emp.EndYear > 0 ? (object)emp.EndYear : DBNull.Value);
-
-                        cmd.Parameters.AddWithValue("@Location", string.IsNullOrEmpty(emp.Location) ? (object)DBNull.Value : emp.Location);
-                        cmd.Parameters.AddWithValue("@Description", string.IsNullOrEmpty(emp.Description) ? (object)DBNull.Value : emp.Description);
-
-                        cmd.ExecuteNonQuery();
+                        entry.ExperienceID = (int)cmd.ExecuteScalar(); // Get the new ExperienceID
                     }
                 }
 
-
-                // Insert Education Data
-                foreach (var edu in EducationEntries)
+                //Insert Education Data
+                foreach (var edu in EducationEntries.Where(edu => edu.EducationID == 0)) // Insert only new entries
                 {
-                    string query = @"INSERT INTO Education 
-(UserId, SchoolName, Degree, StartYear, EndYear, City, Description) 
-VALUES (@UserId, @SchoolName, @Degree, @StartYear, @EndYear, @City, @Description)";
-
-                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    // Validate required fields
+                    if (string.IsNullOrEmpty(edu.School) || string.IsNullOrEmpty(edu.Degree))
                     {
+                        string script = "alert('School Name and Degree are required fields.');";
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "ValidationAlert", script, true);
+                        return; // Stop execution to prevent inserting invalid data
+                    }
+
+                    // SQL query to insert new record and return the generated EducationID
+                    string insertQuery = @"
+        INSERT INTO Education 
+        (UserId, SchoolName, Degree, StartYear, EndYear, City, Description) 
+        OUTPUT INSERTED.EducationID 
+        VALUES (@UserId, @SchoolName, @Degree, @StartYear, @EndYear, @City, @Description)";
+
+                    using (SqlCommand cmd = new SqlCommand(insertQuery, con))
+                    {
+                        // Add parameters
                         cmd.Parameters.AddWithValue("@UserId", userId);
                         cmd.Parameters.AddWithValue("@SchoolName", edu.School ?? (object)DBNull.Value);
                         cmd.Parameters.AddWithValue("@Degree", edu.Degree ?? (object)DBNull.Value);
@@ -604,25 +724,111 @@ VALUES (@UserId, @SchoolName, @Degree, @StartYear, @EndYear, @City, @Description
                         cmd.Parameters.AddWithValue("@City", string.IsNullOrEmpty(edu.City) ? (object)DBNull.Value : edu.City);
                         cmd.Parameters.AddWithValue("@Description", string.IsNullOrEmpty(edu.Description) ? (object)DBNull.Value : edu.Description);
 
-                        cmd.ExecuteNonQuery();
+                        // Retrieve the newly inserted EducationID and assign it to the object
+                        edu.EducationID = (int)cmd.ExecuteScalar();
                     }
                 }
 
 
-                // Insert Links Data
-                foreach (var link in LinkEntries)
+                foreach (var link in LinkEntries.Where(l => l.LinkID == 0)) // Only insert new records
                 {
-                    string query = "INSERT INTO Links (UserId, Label, URL) VALUES (@UserId, @Label, @Url)";
+
+                    if (string.IsNullOrWhiteSpace(link.Label) || string.IsNullOrWhiteSpace(link.Url))
+                    {
+                        // Skip or handle invalid entries
+                        continue;
+                    }
+
+                    string query = "INSERT INTO Links (UserID, Label, Url) OUTPUT INSERTED.LinkID VALUES (@UserId, @Label, @Url)";
                     using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         cmd.Parameters.AddWithValue("@UserId", userId);
                         cmd.Parameters.AddWithValue("@Label", link.Label);
-                        cmd.Parameters.AddWithValue("@URL", link.Url);
+                        cmd.Parameters.AddWithValue("@Url", link.Url);
 
-                        cmd.ExecuteNonQuery();
+                        // Retrieve the newly inserted LinkID and update the object
+                        link.LinkID = (int)cmd.ExecuteScalar();
                     }
                 }
+
             }
+
+            string fullName = txtFullName.Text.Trim();
+            string email = txtEmail.Text.Trim();
+            string phone = txtPhone.Text.Trim();
+            string summary = txtSummary.Text.Trim();
+            string country = txtCountry.Text.Trim(); // Get country from textbox
+            string skills = txtskill.Text.Trim(); // Take skills as a single string
+
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString))
+            {
+                conn.Open();
+
+                // Check if user details exist
+                string checkUserQuery = "SELECT COUNT(*) FROM UserDetail WHERE UserId = @UserId";
+                SqlCommand checkUserCmd = new SqlCommand(checkUserQuery, conn);
+                checkUserCmd.Parameters.AddWithValue("@UserId", userId);
+                int userCount = (int)checkUserCmd.ExecuteScalar();
+
+                if (userCount > 0)
+                {
+                    // Update User Details
+                    string updateUserQuery = @"UPDATE UserDetail 
+                                           SET FullName = @FullName, Email = @Email, PhoneNumber = @PhoneNumber, Summary = @Summary, Country = @Country 
+                                           WHERE UserId = @UserId";
+                    SqlCommand updateUserCmd = new SqlCommand(updateUserQuery, conn);
+                    updateUserCmd.Parameters.AddWithValue("@Fullname", fullName);
+                    updateUserCmd.Parameters.AddWithValue("@UserId", userId);
+                    updateUserCmd.Parameters.AddWithValue("@Email", email);
+                    updateUserCmd.Parameters.AddWithValue("@PhoneNumber", phone);
+                    updateUserCmd.Parameters.AddWithValue("@Summary", summary);
+                    updateUserCmd.Parameters.AddWithValue("@Country", country);
+                    updateUserCmd.ExecuteNonQuery();
+                }
+                else
+                {
+                    // Insert new user details
+                    string insertUserQuery = @"INSERT INTO UserDetail (UserId, FullName, Email, PhoneNumber, Summary, Country) 
+                                           VALUES (@UserId, @FullName, @Email, @PhoneNumber, @Summary, @Country)";
+                    SqlCommand insertUserCmd = new SqlCommand(insertUserQuery, conn);
+                    insertUserCmd.Parameters.AddWithValue("@Fullname", fullName);
+                    insertUserCmd.Parameters.AddWithValue("@UserId", userId);
+                    insertUserCmd.Parameters.AddWithValue("@Email", email);
+                    insertUserCmd.Parameters.AddWithValue("@PhoneNumber", phone);
+                    insertUserCmd.Parameters.AddWithValue("@Summary", summary);
+                    insertUserCmd.Parameters.AddWithValue("@Country", country);
+                    insertUserCmd.ExecuteNonQuery();
+                }
+
+                // Check if skills already exist for this user
+                string checkSkillsQuery = "SELECT COUNT(*) FROM Skills WHERE UserID = @UserId";
+                SqlCommand checkCmd = new SqlCommand(checkSkillsQuery, conn);
+                checkCmd.Parameters.AddWithValue("@UserId", userId);
+                int skillCount = (int)checkCmd.ExecuteScalar();
+
+                if (skillCount > 0)
+                {
+                    // Update existing skills
+                    string updateSkillsQuery = "UPDATE Skills SET SkillsText = @SkillsText WHERE UserID = @UserId";
+                    SqlCommand updateSkillsCmd = new SqlCommand(updateSkillsQuery, conn);
+                    updateSkillsCmd.Parameters.AddWithValue("@UserId", userId);
+                    updateSkillsCmd.Parameters.AddWithValue("@SkillsText", skills); // Ensure no extra quotes or format issues
+                    updateSkillsCmd.ExecuteNonQuery();
+
+                }
+                else
+                {
+                    // Insert new skills
+                    string insertSkillsQuery = "INSERT INTO Skills (UserID, SkillsText) VALUES (@UserId, @SkillsText)";
+                    SqlCommand insertSkillsCmd = new SqlCommand(insertSkillsQuery, conn);
+                    insertSkillsCmd.Parameters.AddWithValue("@UserId", userId);
+                    insertSkillsCmd.Parameters.AddWithValue("@SkillsText", skills);
+                    insertSkillsCmd.ExecuteNonQuery();
+
+                }
+
+            }
+
 
             // Redirect to resume result page
             Response.Redirect("Default.aspx");
