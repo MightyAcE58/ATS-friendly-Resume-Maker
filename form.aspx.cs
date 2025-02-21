@@ -831,7 +831,7 @@ namespace ATS_friendly_Resume_Maker
 
 
             // Redirect to resume result page
-            Response.Redirect("Default.aspx");
+            Response.Redirect("template-1.aspx");
         }
     }
 }
