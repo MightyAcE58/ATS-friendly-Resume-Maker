@@ -7,8 +7,8 @@
     <style>
         body {
             margin: 2rem;
-            margin-left:3rem;
-            margin-right:3rem;
+            margin-left: 3rem;
+            margin-right: 3rem;
         }
     </style>
 </head>
@@ -111,7 +111,7 @@
                             .set({
                                 filename: 'Resume.pdf',
                                 jsPDF: { format: 'a4', orientation: 'portrait', unit: 'mm', margin: [10, 10, 10, 10] },
-                                html2canvas: { scale: 2, logging: true }, // Ensures better quality
+                                html2canvas: { scale: 3, logging: true, useCORS: true }, // Ensures better quality
                                 pagebreak: { mode: ['avoid-all', 'css'] } // Prevents unwanted breaks
                             })
                             .from(document.body) // Targets only the resume content

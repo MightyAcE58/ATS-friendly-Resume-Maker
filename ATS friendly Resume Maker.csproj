@@ -160,6 +160,7 @@
   <ItemGroup>
     <Content Include="assets\css\main.css" />
     <Content Include="assets\img\apple-touch-icon.png" />
+    <Content Include="assets\img\delete.svg" />
     <Content Include="assets\img\details-1.png" />
     <Content Include="assets\img\details-2.png" />
     <Content Include="assets\img\details-3.png" />

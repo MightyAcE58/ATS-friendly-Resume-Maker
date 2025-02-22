@@ -753,81 +753,179 @@ namespace ATS_friendly_Resume_Maker
 
             }
 
+            // Validate required fields
+            if (string.IsNullOrWhiteSpace(txtFullName.Text) ||
+                string.IsNullOrWhiteSpace(txtEmail.Text) ||
+                string.IsNullOrWhiteSpace(txtPhone.Text) ||
+                string.IsNullOrWhiteSpace(txtCountry.Text))
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Please fill in all required fields!');", true);
+                return; // Stop further execution
+            }
+
+            // Trim values and handle nulls
             string fullName = txtFullName.Text.Trim();
             string email = txtEmail.Text.Trim();
             string phone = txtPhone.Text.Trim();
-            string summary = txtSummary.Text.Trim();
-            string country = txtCountry.Text.Trim(); // Get country from textbox
-            string skills = txtskill.Text.Trim(); // Take skills as a single string
+            string summary = string.IsNullOrWhiteSpace(txtSummary.Text) ? DBNull.Value.ToString() : txtSummary.Text.Trim();
+            string country = txtCountry.Text.Trim();
+            string skills = string.IsNullOrWhiteSpace(txtskill.Text) ? DBNull.Value.ToString() : txtskill.Text.Trim();
 
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString))
             {
                 conn.Open();
 
-                // Check if user details exist
+                // Check if user exists
                 string checkUserQuery = "SELECT COUNT(*) FROM UserDetail WHERE UserId = @UserId";
-                SqlCommand checkUserCmd = new SqlCommand(checkUserQuery, conn);
-                checkUserCmd.Parameters.AddWithValue("@UserId", userId);
-                int userCount = (int)checkUserCmd.ExecuteScalar();
-
-                if (userCount > 0)
+                using (SqlCommand checkUserCmd = new SqlCommand(checkUserQuery, conn))
                 {
-                    // Update User Details
-                    string updateUserQuery = @"UPDATE UserDetail 
-                                           SET FullName = @FullName, Email = @Email, PhoneNumber = @PhoneNumber, Summary = @Summary, Country = @Country 
-                                           WHERE UserId = @UserId";
-                    SqlCommand updateUserCmd = new SqlCommand(updateUserQuery, conn);
-                    updateUserCmd.Parameters.AddWithValue("@Fullname", fullName);
-                    updateUserCmd.Parameters.AddWithValue("@UserId", userId);
-                    updateUserCmd.Parameters.AddWithValue("@Email", email);
-                    updateUserCmd.Parameters.AddWithValue("@PhoneNumber", phone);
-                    updateUserCmd.Parameters.AddWithValue("@Summary", summary);
-                    updateUserCmd.Parameters.AddWithValue("@Country", country);
-                    updateUserCmd.ExecuteNonQuery();
-                }
-                else
-                {
-                    // Insert new user details
-                    string insertUserQuery = @"INSERT INTO UserDetail (UserId, FullName, Email, PhoneNumber, Summary, Country) 
-                                           VALUES (@UserId, @FullName, @Email, @PhoneNumber, @Summary, @Country)";
-                    SqlCommand insertUserCmd = new SqlCommand(insertUserQuery, conn);
-                    insertUserCmd.Parameters.AddWithValue("@Fullname", fullName);
-                    insertUserCmd.Parameters.AddWithValue("@UserId", userId);
-                    insertUserCmd.Parameters.AddWithValue("@Email", email);
-                    insertUserCmd.Parameters.AddWithValue("@PhoneNumber", phone);
-                    insertUserCmd.Parameters.AddWithValue("@Summary", summary);
-                    insertUserCmd.Parameters.AddWithValue("@Country", country);
-                    insertUserCmd.ExecuteNonQuery();
+                    checkUserCmd.Parameters.AddWithValue("@UserId", userId);
+                    int userCount = (int)checkUserCmd.ExecuteScalar();
+
+                    if (userCount > 0)
+                    {
+                        // Update user details
+                        string updateUserQuery = @"UPDATE UserDetail 
+                                       SET FullName = @FullName, Email = @Email, PhoneNumber = @PhoneNumber, 
+                                           Summary = @Summary, Country = @Country 
+                                       WHERE UserId = @UserId";
+                        using (SqlCommand updateUserCmd = new SqlCommand(updateUserQuery, conn))
+                        {
+                            updateUserCmd.Parameters.AddWithValue("@UserId", userId);
+                            updateUserCmd.Parameters.AddWithValue("@FullName", fullName);
+                            updateUserCmd.Parameters.AddWithValue("@Email", email);
+                            updateUserCmd.Parameters.AddWithValue("@PhoneNumber", phone);
+                            updateUserCmd.Parameters.AddWithValue("@Summary", summary == DBNull.Value.ToString() ? DBNull.Value : (object)summary);
+                            updateUserCmd.Parameters.AddWithValue("@Country", country);
+                            updateUserCmd.ExecuteNonQuery();
+                        }
+                    }
+                    else
+                    {
+                        // Insert new user details
+                        string insertUserQuery = @"INSERT INTO UserDetail (UserId, FullName, Email, PhoneNumber, Summary, Country) 
+                                       VALUES (@UserId, @FullName, @Email, @PhoneNumber, @Summary, @Country)";
+                        using (SqlCommand insertUserCmd = new SqlCommand(insertUserQuery, conn))
+                        {
+                            insertUserCmd.Parameters.AddWithValue("@UserId", userId);
+                            insertUserCmd.Parameters.AddWithValue("@FullName", fullName);
+                            insertUserCmd.Parameters.AddWithValue("@Email", email);
+                            insertUserCmd.Parameters.AddWithValue("@PhoneNumber", phone);
+                            insertUserCmd.Parameters.AddWithValue("@Summary", summary == DBNull.Value.ToString() ? DBNull.Value : (object)summary);
+                            insertUserCmd.Parameters.AddWithValue("@Country", country);
+                            insertUserCmd.ExecuteNonQuery();
+                        }
+                    }
                 }
 
-                // Check if skills already exist for this user
+                // Check if skills exist
                 string checkSkillsQuery = "SELECT COUNT(*) FROM Skills WHERE UserID = @UserId";
-                SqlCommand checkCmd = new SqlCommand(checkSkillsQuery, conn);
-                checkCmd.Parameters.AddWithValue("@UserId", userId);
-                int skillCount = (int)checkCmd.ExecuteScalar();
-
-                if (skillCount > 0)
+                using (SqlCommand checkCmd = new SqlCommand(checkSkillsQuery, conn))
                 {
-                    // Update existing skills
-                    string updateSkillsQuery = "UPDATE Skills SET SkillsText = @SkillsText WHERE UserID = @UserId";
-                    SqlCommand updateSkillsCmd = new SqlCommand(updateSkillsQuery, conn);
-                    updateSkillsCmd.Parameters.AddWithValue("@UserId", userId);
-                    updateSkillsCmd.Parameters.AddWithValue("@SkillsText", skills); // Ensure no extra quotes or format issues
-                    updateSkillsCmd.ExecuteNonQuery();
+                    checkCmd.Parameters.AddWithValue("@UserId", userId);
+                    int skillCount = (int)checkCmd.ExecuteScalar();
 
+                    if (skillCount > 0)
+                    {
+                        // Update skills
+                        string updateSkillsQuery = "UPDATE Skills SET SkillsText = @SkillsText WHERE UserID = @UserId";
+                        using (SqlCommand updateSkillsCmd = new SqlCommand(updateSkillsQuery, conn))
+                        {
+                            updateSkillsCmd.Parameters.AddWithValue("@UserId", userId);
+                            updateSkillsCmd.Parameters.AddWithValue("@SkillsText", skills == DBNull.Value.ToString() ? DBNull.Value : (object)skills);
+                            updateSkillsCmd.ExecuteNonQuery();
+                        }
+                    }
+                    else
+                    {
+                        // Insert skills
+                        string insertSkillsQuery = "INSERT INTO Skills (UserID, SkillsText) VALUES (@UserId, @SkillsText)";
+                        using (SqlCommand insertSkillsCmd = new SqlCommand(insertSkillsQuery, conn))
+                        {
+                            insertSkillsCmd.Parameters.AddWithValue("@UserId", userId);
+                            insertSkillsCmd.Parameters.AddWithValue("@SkillsText", skills == DBNull.Value.ToString() ? DBNull.Value : (object)skills);
+                            insertSkillsCmd.ExecuteNonQuery();
+                        }
+                    }
                 }
-                else
-                {
-                    // Insert new skills
-                    string insertSkillsQuery = "INSERT INTO Skills (UserID, SkillsText) VALUES (@UserId, @SkillsText)";
-                    SqlCommand insertSkillsCmd = new SqlCommand(insertSkillsQuery, conn);
-                    insertSkillsCmd.Parameters.AddWithValue("@UserId", userId);
-                    insertSkillsCmd.Parameters.AddWithValue("@SkillsText", skills);
-                    insertSkillsCmd.ExecuteNonQuery();
-
-                }
-
             }
+
+
+            //string fullName = txtFullName.Text.Trim();
+            //string email = txtEmail.Text.Trim();
+            //string phone = txtPhone.Text.Trim();
+            //string summary = txtSummary.Text.Trim();
+            //string country = txtCountry.Text.Trim(); // Get country from textbox
+            //string skills = txtskill.Text.Trim(); // Take skills as a single string
+
+            //using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString))
+            //{
+            //    conn.Open();
+
+            //    // Check if user details exist
+            //    string checkUserQuery = "SELECT COUNT(*) FROM UserDetail WHERE UserId = @UserId";
+            //    SqlCommand checkUserCmd = new SqlCommand(checkUserQuery, conn);
+            //    checkUserCmd.Parameters.AddWithValue("@UserId", userId);
+            //    int userCount = (int)checkUserCmd.ExecuteScalar();
+
+            //    if (userCount > 0)
+            //    {
+            //        // Update User Details
+            //        string updateUserQuery = @"UPDATE UserDetail 
+            //                               SET FullName = @FullName, Email = @Email, PhoneNumber = @PhoneNumber, Summary = @Summary, Country = @Country 
+            //                               WHERE UserId = @UserId";
+            //        SqlCommand updateUserCmd = new SqlCommand(updateUserQuery, conn);
+            //        updateUserCmd.Parameters.AddWithValue("@Fullname", fullName);
+            //        updateUserCmd.Parameters.AddWithValue("@UserId", userId);
+            //        updateUserCmd.Parameters.AddWithValue("@Email", email);
+            //        updateUserCmd.Parameters.AddWithValue("@PhoneNumber", phone);
+            //        updateUserCmd.Parameters.AddWithValue("@Summary", summary);
+            //        updateUserCmd.Parameters.AddWithValue("@Country", country);
+            //        updateUserCmd.ExecuteNonQuery();
+            //    }
+            //    else
+            //    {
+            //        // Insert new user details
+            //        string insertUserQuery = @"INSERT INTO UserDetail (UserId, FullName, Email, PhoneNumber, Summary, Country) 
+            //                               VALUES (@UserId, @FullName, @Email, @PhoneNumber, @Summary, @Country)";
+            //        SqlCommand insertUserCmd = new SqlCommand(insertUserQuery, conn);
+            //        insertUserCmd.Parameters.AddWithValue("@Fullname", fullName);
+            //        insertUserCmd.Parameters.AddWithValue("@UserId", userId);
+            //        insertUserCmd.Parameters.AddWithValue("@Email", email);
+            //        insertUserCmd.Parameters.AddWithValue("@PhoneNumber", phone);
+            //        insertUserCmd.Parameters.AddWithValue("@Summary", summary);
+            //        insertUserCmd.Parameters.AddWithValue("@Country", country);
+            //        insertUserCmd.ExecuteNonQuery();
+            //    }
+
+            //    // Check if skills already exist for this user
+            //    string checkSkillsQuery = "SELECT COUNT(*) FROM Skills WHERE UserID = @UserId";
+            //    SqlCommand checkCmd = new SqlCommand(checkSkillsQuery, conn);
+            //    checkCmd.Parameters.AddWithValue("@UserId", userId);
+            //    int skillCount = (int)checkCmd.ExecuteScalar();
+
+            //    if (skillCount > 0)
+            //    {
+            //        // Update existing skills
+            //        string updateSkillsQuery = "UPDATE Skills SET SkillsText = @SkillsText WHERE UserID = @UserId";
+            //        SqlCommand updateSkillsCmd = new SqlCommand(updateSkillsQuery, conn);
+            //        updateSkillsCmd.Parameters.AddWithValue("@UserId", userId);
+            //        updateSkillsCmd.Parameters.AddWithValue("@SkillsText", skills); // Ensure no extra quotes or format issues
+            //        updateSkillsCmd.ExecuteNonQuery();
+
+            //    }
+            //    else
+            //    {
+            //        // Insert new skills
+            //        string insertSkillsQuery = "INSERT INTO Skills (UserID, SkillsText) VALUES (@UserId, @SkillsText)";
+            //        SqlCommand insertSkillsCmd = new SqlCommand(insertSkillsQuery, conn);
+            //        insertSkillsCmd.Parameters.AddWithValue("@UserId", userId);
+            //        insertSkillsCmd.Parameters.AddWithValue("@SkillsText", skills);
+            //        insertSkillsCmd.ExecuteNonQuery();
+
+            //    }
+
+            //}
 
 
             // Redirect to resume result page

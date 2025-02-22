@@ -3,67 +3,92 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>ATS Resume Maker</title>
+    <title>ResumePro - Create Your Own Resume</title>
+    <!-- Favicons -->
+    <link href="assets/img/favicon.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
     <style>
-        body {
-            background-color: #ffffff;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' %3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%23000000'/%3E%3Cstop offset='1' stop-color='%238C0394'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpattern id='b' width='24' height='24' patternUnits='userSpaceOnUse'%3E%3Ccircle fill='%23ffffff' cx='12' cy='12' r='12'/%3E%3C/pattern%3E%3Crect width='100%25' height='100%25' fill='url(%23a)'/%3E%3Crect width='100%25' height='100%25' fill='url(%23b)' fill-opacity='0.1'/%3E%3C/svg%3E");
-            background-attachment: fixed;
+        /* Global Box Sizing */
+        *, *::before, *::after {
+            box-sizing: border-box;
         }
 
-        /* Container Styles */
+        /* Global Styles */
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: "Raleway", sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* Form Container */
         .form-container {
             margin: 20px auto;
-            padding: 25px;
+            padding: 30px 40px;
             max-width: 850px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(177, 130, 242, 1);
-            border: 1px solid #ddd;
-            transition: all 0.3s ease;
-            font-family: "Raleway", serif;
-            background-color: #333333;
-            border-color: #777777;
-            color: white;
-            border-style: none !important;
+            border-radius: 10px;
+            background: #1f1f1f;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border: 1px solid #444;
+            transition: box-shadow 0.3s ease;
         }
 
             .form-container:hover {
-                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+                box-shadow: 0 6px 30px rgba(0, 0, 0, 0.7);
             }
 
+        /* Labels */
         label {
             font-weight: 600;
             font-size: 14px;
-            color: white;
+            color: #fff;
             margin-bottom: 8px;
             display: block;
             transition: color 0.3s ease;
         }
 
+        /* Inputs, Selects, Textareas */
         .form-container input,
         .form-container select,
         .form-container textarea {
-            width: 93%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            width: 100%; /* Changed from 93% to 100% */
+            padding: 12px 15px;
+            margin: 10px 0 20px;
+            border: 1px solid #555;
+            border-radius: 6px;
             font-size: 16px;
-            background-color: #e0e0e0;
-            color: black;
+            background: #2b2b2b;
+            color: #e0e0e0;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
+            .form-container input:focus,
+            .form-container select:focus,
+            .form-container textarea:focus {
+                border-color: #9a60e6;
+                box-shadow: 0 0 8px rgba(154, 96, 230, 0.5);
+                outline: none;
+            }
+
+        .no-resize {
+            resize: none;
+        }
+
+        /* Buttons in Form Container */
         .form-container button,
         .form-container .btn {
-            padding: 14px;
+            padding: 14px 20px;
             background-color: #9a60e6;
             color: #fff;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             font-size: 16px;
             cursor: pointer;
             width: 100%;
@@ -73,38 +98,72 @@
 
             .form-container button:hover,
             .form-container .btn:hover {
-                background-color: #814dc2 !important;
+                background-color: #814dc2;
             }
 
-        .employment-entry, .education-entry, .link-entry, .skill-entry {
+        /* Entry Containers (employment, education, link, skill) */
+        .employment-entry,
+        .education-entry,
+        .link-entry,
+        .skill-entry {
+            position: relative; /* For absolute positioning of remove button */
             margin-bottom: 20px;
-            padding: 15px;
-            border: 0px solid #ddd;
-            border-radius: 8px;
-            background-color: #2e2e2e;
-            color: white;
+            padding: 20px;
+            border-radius: 6px;
+            background: #252525;
+            color: #fff;
+            border: 1px solid #333;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
+            .employment-entry:hover,
+            .education-entry:hover,
+            .link-entry:hover,
+            .skill-entry:hover {
+                border-color: #9a60e6;
+                box-shadow: 0 4px 12px rgba(154, 96, 230, 0.3);
+            }
+
+        /* Icon-Only Remove Button (Using Provided SVG Icon) */
         .btn-remove {
-            background-color: #ff7043 !important;
-            margin-left: 462px !important;
-            padding: 5px 1.5rem !important;
-            font-size: 1rem !important;
-            border-radius: 50px !important;
-            color: white !important;
-            border-style: none !important;
+            position: absolute !important;
+            top: 12px !important;
+            right: 12px !important;
+            width: 24px !important;
+            height: 24px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            outline: none !important;
+            background-color: transparent !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            appearance: none !important;
+            /* Inline SVG as background */
+            background: url("data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20height=%2224px%22%20viewBox=%220%20-960%20960%20960%22%20width=%2224px%22%20fill=%22%239a60e6%22%3E%3Cpath%20d=%22M280-120q-33%200-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0%2033-23.5%2056.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160%200h80v-360h-80v360ZM280-720v520-520Z%22/%3E%3C/svg%3E") no-repeat center center !important;
+            background-size: contain !important;
+            /* Hide button text */
+            color: transparent !important;
+            text-indent: -9999px !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            cursor: pointer !important;
+            transition: transform 0.3s ease !important;
         }
 
             .btn-remove:hover {
-                background-color: #e64a19 !important;
+                transform: scale(1.1);
             }
 
-        .date-container, .years-container {
+        /* Date & Years Containers */
+        .date-container,
+        .years-container {
             display: flex;
             gap: 10px;
             color: #b3b3b3;
         }
 
+        /* Action Buttons */
         .action-buttons {
             display: flex;
             flex-wrap: wrap;
@@ -117,6 +176,7 @@
                 min-width: 200px;
             }
 
+        /* Decorative Element */
         .decor {
             display: flex;
             justify-content: space-between;
@@ -130,7 +190,7 @@
 <body>
     <form id="form1" runat="server">
         <div class="form-container">
-            <h1>ATS-Friendly Resume Maker</h1>
+            <h1>Resume Pro</h1>
 
             <asp:ScriptManager ID="ScriptManager1" runat="server" />
             <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional">
@@ -263,7 +323,7 @@
 
                                     </div>
 
-                                    <label for="txtSchool">School Name:</label>
+                                    <label for="txtSchool">School/College Name:</label>
                                     <asp:TextBox ID="txtSchool" runat="server" placeholder="Enter school name"></asp:TextBox>
 
                                     <label for="txtDegree">Degree:</label>
