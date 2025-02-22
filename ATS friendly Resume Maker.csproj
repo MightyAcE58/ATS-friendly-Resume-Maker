@@ -168,6 +168,7 @@
     <Content Include="assets\img\faq.jpg" />
     <Content Include="assets\img\favicon.png" />
     <Content Include="assets\img\hero-bg-2.jpg" />
+    <Content Include="assets\img\form-bg.svg" />
     <Content Include="assets\img\hero-img.png" />
     <Content Include="assets\img\logo-nobg.png" />
     <Content Include="assets\img\logo.png" />

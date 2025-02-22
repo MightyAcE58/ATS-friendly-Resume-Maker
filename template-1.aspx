@@ -49,7 +49,8 @@
         <div class="Experience">
             <asp:Repeater ID="rptExperience" runat="server">
                 <ItemTemplate>
-                    <h2 class="western" align="left"><%# Eval("JobTitle") %> | <%# Eval("CompanyName") %> | <%# GetFormattedDuration(Eval("StartMonth"), Eval("StartYear"), Eval("EndMonth"), Eval("EndYear")) %></h2>
+                    <h2 class="western" align="left" style="font-size: medium">
+                        <%# Eval("JobTitle") %> | <%# Eval("CompanyName") %> | <%# GetFormattedDuration(Eval("StartMonth"), Eval("StartYear"), Eval("EndMonth"), Eval("EndYear")) %></h2>
                     <ul>
                         <li>
                             <p align="left" style="line-height: 120%; margin-bottom: 0.42cm">
@@ -77,49 +78,66 @@
 
         <h1 align="left"><font color="#2a7b88"><font face="Cambria, serif"><font size="4" style="font-size: 14pt"><b>Skills & Abilities</b></font></font></font></h1>
 
-        <div class="Skills">
-            <asp:Repeater ID="rptSkills" runat="server">
-                <ItemTemplate>
-                    <table width="100%" cellpadding="0" cellspacing="0">
-                        <col width="137*" />
-                        <col width="119*" />
-                        <tr valign="top">
-                            <td width="100%" style="border: none; padding: 0cm">
-                                <ul>
-                                    <li>
-                                        <p align="left" style="orphans: 0; widows: 0; margin-bottom: 0.42cm">
-                                            <font color="#000000"><font face="Cambria, serif"><font size="3" style="font-size: 12pt">
-                                                <%# Eval("SkillsText") %>
-                                            </font></font></font>
-                                        </p>
-                                    </li>
-                                </ul>
-                            </td>
-                        </tr>
-                    </table>
-                </ItemTemplate>
-            </asp:Repeater>
-
-
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-            <script>
-
-                window.onload = function () {
-                    setTimeout(() => {
-                        html2pdf()
-                            .set({
-                                filename: 'Resume.pdf',
-                                jsPDF: { format: 'a4', orientation: 'portrait', unit: 'mm', margin: [10, 10, 10, 10] },
-                                html2canvas: { scale: 3, logging: true, useCORS: true }, // Ensures better quality
-                                pagebreak: { mode: ['avoid-all', 'css'] } // Prevents unwanted breaks
-                            })
-                            .from(document.body) // Targets only the resume content
-                            .save();
-                    }, 1000);
-                };
-            </script>
+        <div class="Skill">
+            <table width="100%" cellpadding="6" cellspacing="5">
+                <!--<col width="137*" />
+                <col width="119*" />-->
+                <tr valign="top">
+                    <td width="100%" style="border: none; padding: 0cm">
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                            <asp:Repeater ID="rptSkills" runat="server">
+                                <ItemTemplate>
+                                    <b>
+                                        <span style="font-family: Cambria, serif; font-size: 12pt; color: #000000; list-style: disc">
+                                            <%# Eval("Skill") %>
+                                        </span>
+                                    </b>
+                                </ItemTemplate>
+                            </asp:Repeater>
+                        </div>
+                    </td>
+                </tr>
+            </table>
         </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+        <script>
+            const download = function () {
+                setTimeout(() => {
+                    html2pdf()
+                        .set({
+                            filename: 'Resume.pdf',
+                            jsPDF: { format: 'a4', orientation: 'portrait', unit: 'mm', margin: [10, 10, 10, 10] },
+                            html2canvas: { scale: 3, logging: true }, // Ensures better quality
+                            pagebreak: { mode: ['avoid-all', 'css'] } // Prevents unwanted breaks
+                        })
+                        .from(document.body) // Targets only the resume content
+                        .save();
+                }, 1000);
+            };
+
+            if (confirm("Do you want to Download this Resume?") == 1) {
+                download();
+            } else {
+                alert("Reload this page if you want to download it.")
+            }
+
+            //window.onload = function () {
+            //    setTimeout(() => {
+            //        html2pdf()
+            //            .set({
+            //                filename: 'Resume.pdf',
+            //                jsPDF: { format: 'a4', orientation: 'portrait', unit: 'mm', margin: [10, 10, 10, 10] },
+            //                html2canvas: { scale: 2, logging: true }, // Ensures better quality
+            //                pagebreak: { mode: ['avoid-all', 'css'] } // Prevents unwanted breaks
+            //            })
+            //            .from(document.body) // Targets only the resume content
+            //            .save();
+            //    }, 1000);
+            //};
+        </script>
+
     </form>
+
 </body>
 </html>

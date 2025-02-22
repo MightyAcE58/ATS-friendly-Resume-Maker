@@ -30,9 +30,6 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <asp:Button ID="Button1" runat="server" CssClass="btn btn-danger dropdown-item" Text="My Resumes"/>
-                                </li>
-                                <li>
                                     <asp:Button ID="logoutButton" runat="server" CssClass="btn btn-danger dropdown-item" Text="Logout" OnClick="LogoutButton_Click" />
                                 </li>
                             </ul>

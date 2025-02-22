@@ -2,8 +2,10 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Web.UI;
+
 
 
 namespace ATS_friendly_Resume_Maker
@@ -49,7 +51,7 @@ namespace ATS_friendly_Resume_Maker
             int userId = Convert.ToInt32(Session["UserId"]);
             return userId;
 
-            
+
         }
 
         private void LoadPersonalInfo(int userId)
@@ -182,18 +184,26 @@ namespace ATS_friendly_Resume_Maker
             using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString))
             {
                 string query = "SELECT SkillsText FROM Skills WHERE UserId = @UserId";
-
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@UserId", userId);
                     conn.Open();
 
-                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
-                    {
-                        DataTable dt = new DataTable();
-                        adapter.Fill(dt);
+                    // Get the skills text as a single string
+                    string Skill = (string)cmd.ExecuteScalar();
 
-                        rptSkills.DataSource = dt;
+                    if (!string.IsNullOrEmpty(Skill))
+                    {
+                        // Parse the skills by splitting on commas
+                        string[] skills = Skill.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                                   .Select(s => s.Trim())
+                                                   .ToArray();
+
+                        // Create a data source for the repeater
+                        var skillsList = skills.Select(skill => new { Skill = skill }).ToList();
+
+                        // Bind the parsed skills to the repeater
+                        rptSkills.DataSource = skillsList;
                         rptSkills.DataBind();
                     }
                 }
