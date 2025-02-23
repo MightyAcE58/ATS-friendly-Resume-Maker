@@ -80,9 +80,6 @@
             <asp:CompareValidator ID="cvPasswords" runat="server" ControlToValidate="txtRetypePassword" ControlToCompare="txtRegPassword" ErrorMessage="Passwords do not match" ForeColor="Red" Display="Dynamic" />
         </div>
 
-        <div class="form-floating">
-            <asp:Label ID="lblStatus" runat="server" ForeColor="Red"></asp:Label>
-        </div>
         <!-- Register Button -->
         <div class="form-floating mt-2">
             <asp:Button ID="btnRegister" runat="server" CssClass="btn btn-success w-100 py-2" Text="Register" OnClick="btnRegister_Click" />

@@ -73,11 +73,9 @@
             <asp:TextBox ID="txtPassword" runat="server" CssClass="form-control" TextMode="Password" placeholder="Password"></asp:TextBox>
             <label for="txtPassword">Password</label>
         </div>
-
         <div class="form-floating">
             <asp:Label ID="lblStatus" runat="server" ForeColor="Red"></asp:Label>
         </div>
-
         <asp:Button ID="btnSignIn" runat="server" CssClass="btn btn-purple w-100 py-2" Text="Sign in" OnClick="btnSignIn_Click" />
 
         <div class="text-center mt-4">
