@@ -77,7 +77,7 @@ namespace ATS_friendly_Resume_Maker
                 }
 
                 // Get contact info and summary from UserDetail table
-                string contactQuery = "SELECT Email, PhoneNumber, Summary FROM UserDetail WHERE UserId = @UserId";
+                string contactQuery = "SELECT Email, Country ,PhoneNumber, Summary FROM UserDetail WHERE UserId = @UserId";
                 string contactInfo = "";
                 string summary = "";
 
@@ -94,7 +94,7 @@ namespace ATS_friendly_Resume_Maker
                             contactInfo = reader["Email"].ToString();
                             if (!string.IsNullOrEmpty(reader["PhoneNumber"].ToString()))
                             {
-                                contactInfo += " | " + reader["PhoneNumber"].ToString();
+                                contactInfo += " | " + reader["Country"].ToString() + " | " + reader["PhoneNumber"].ToString();
                             }
 
                             summary = reader["Summary"].ToString();

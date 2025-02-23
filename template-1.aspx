@@ -3,7 +3,10 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>Professional Resume</title>
+    <!-- Favicons -->
+    <link href="assets/img/favicon.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <title>ResumePro</title>
     <style>
         body {
             margin: 2rem;
@@ -121,20 +124,6 @@
             } else {
                 alert("Reload this page if you want to download it.")
             }
-
-            //window.onload = function () {
-            //    setTimeout(() => {
-            //        html2pdf()
-            //            .set({
-            //                filename: 'Resume.pdf',
-            //                jsPDF: { format: 'a4', orientation: 'portrait', unit: 'mm', margin: [10, 10, 10, 10] },
-            //                html2canvas: { scale: 2, logging: true }, // Ensures better quality
-            //                pagebreak: { mode: ['avoid-all', 'css'] } // Prevents unwanted breaks
-            //            })
-            //            .from(document.body) // Targets only the resume content
-            //            .save();
-            //    }, 1000);
-            //};
         </script>
 
     </form>

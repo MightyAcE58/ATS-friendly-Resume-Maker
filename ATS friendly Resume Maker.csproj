@@ -215,9 +215,11 @@
     <Content Include="assets\vendor\swiper\swiper-bundle.min.js" />
     <Content Include="form.aspx" />
     <Content Include="Login.aspx" />
+    <Content Include="PickUrTemplate.aspx" />
     <Content Include="Register.aspx" />
     <Content Include="main.css" />
     <Content Include="template-1.aspx" />
+    <Content Include="template-2.aspx" />
     <Content Include="test-form.aspx" />
     <Content Include="Web.config" />
     <Content Include="Default.aspx" />
@@ -243,6 +245,13 @@
     <Compile Include="Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
+    <Compile Include="PickUrTemplate.aspx.cs">
+      <DependentUpon>PickUrTemplate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PickUrTemplate.aspx.designer.cs">
+      <DependentUpon>PickUrTemplate.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
@@ -264,6 +273,13 @@
     </Compile>
     <Compile Include="template-1.aspx.designer.cs">
       <DependentUpon>template-1.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="template-2.aspx.cs">
+      <DependentUpon>template-2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="template-2.aspx.designer.cs">
+      <DependentUpon>template-2.aspx</DependentUpon>
     </Compile>
     <Compile Include="test-form.aspx.cs">
       <DependentUpon>test-form.aspx</DependentUpon>

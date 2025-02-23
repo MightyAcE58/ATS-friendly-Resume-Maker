@@ -23,24 +23,7 @@ namespace ATS_friendly_Resume_Maker
                 Response.Redirect("Default.aspx");
             }
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-
-                try
-                {
-                    conn.Open();
-                    if (conn.State == ConnectionState.Open)
-                    {
-                        lblStatus.Text = "✅ Database Connected Successfully!";
-                        lblStatus.ForeColor = System.Drawing.Color.Green;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    lblStatus.Text = "❌ Database Connection Failed: " + ex.Message;
-                    lblStatus.ForeColor = System.Drawing.Color.Red;
-                }
-            }
+            
         }
 
         protected void btnSignIn_Click(object sender, EventArgs e)
