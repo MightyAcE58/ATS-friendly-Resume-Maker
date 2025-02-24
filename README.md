@@ -11,6 +11,16 @@ The **ATS-Friendly Resume Maker** is a web application that helps users create p
 ✔️ **ATS Optimization** – Ensures the resume format meets ATS compatibility standards.  
 
 ---
+## **sneak peek**
+![home-page](https://github.com/user-attachments/assets/754ca3fa-1c92-4f73-86c2-40a958ba7165)
+
+![regestration](https://github.com/user-attachments/assets/845069b4-03e2-4e8a-b236-4492bbba80a8)
+
+![form](https://github.com/user-attachments/assets/8148fb46-d4ca-4504-824d-7560f6d2e04f)
+
+![template](https://github.com/user-attachments/assets/9753c1da-da0c-4c2f-aa05-efb98db5abc4)
+
+![output](https://github.com/user-attachments/assets/9e122237-68aa-4ec0-90d7-8ae5eecbc414)
 
 ## 📂 **Project File Structure**  
 
