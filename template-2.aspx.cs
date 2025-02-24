@@ -38,7 +38,6 @@ namespace ATS_friendly_Resume_Maker
             catch (Exception ex)
             {
                 ShowError("An error occurred while loading the resume.");
-                // Log the error here
             }
         }
 
@@ -116,7 +115,7 @@ namespace ATS_friendly_Resume_Maker
                         }
                     }
 
-                    // Load and append links
+                    
                     using (SqlCommand cmd = new SqlCommand("SELECT Label, URL FROM Links WHERE UserId = @UserId", conn))
                     {
                         cmd.Parameters.AddWithValue("@UserId", userId);
@@ -139,7 +138,7 @@ namespace ATS_friendly_Resume_Maker
                 catch (Exception ex)
                 {
                     ShowError("Error loading personal information");
-                    // Log the error here
+                    
                 }
             }
         }
@@ -186,7 +185,7 @@ namespace ATS_friendly_Resume_Maker
                 catch (Exception ex)
                 {
                     ShowError("Error loading experience data");
-                    // Log the error here
+                    
                 }
             }
         }
@@ -227,7 +226,7 @@ namespace ATS_friendly_Resume_Maker
                 catch (Exception ex)
                 {
                     ShowError("Error loading education data");
-                    // Log the error here
+                    
                 }
             }
         }
@@ -260,7 +259,7 @@ namespace ATS_friendly_Resume_Maker
                 catch (Exception ex)
                 {
                     ShowError("Error loading skills data");
-                    // Log the error here
+                    
                 }
             }
         }
@@ -274,7 +273,7 @@ namespace ATS_friendly_Resume_Maker
 
             var duration = new StringBuilder();
 
-            // Format start date
+            
             if (startMonth != DBNull.Value && startYear != DBNull.Value)
             {
                 int sMonth = Convert.ToInt32(startMonth);
@@ -287,7 +286,7 @@ namespace ATS_friendly_Resume_Maker
 
             duration.Append(" - ");
 
-            // Format end date
+            
             if (endMonth != DBNull.Value && endYear != DBNull.Value)
             {
                 int eMonth = Convert.ToInt32(endMonth);
@@ -330,9 +329,6 @@ namespace ATS_friendly_Resume_Maker
 
         private void ShowError(string message)
         {
-            // Implement your error handling here
-            // For example, you could show a message on the page
-            // or redirect to an error page
             Response.Write($"<script>alert('{message}');</script>");
         }
     }

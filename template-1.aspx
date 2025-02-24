@@ -7,13 +7,6 @@
     <link href="assets/img/favicon.png" rel="icon">
     <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
     <title>ResumePro</title>
-    <style>
-        body {
-/*            margin: 2rem;
-            margin-left: 3rem;
-            margin-right: 3rem;*/
-        }
-    </style>
 </head>
 <body lang="en-IN" dir="ltr">
     <form id="form1" runat="server">
@@ -83,8 +76,6 @@
 
         <div class="Skill">
             <table width="100%" cellpadding="6" cellspacing="5">
-                <!--<col width="137*" />
-                <col width="119*" />-->
                 <tr valign="top">
                     <td width="100%" style="border: none; padding: 0cm">
                         <div style="display: flex; flex-wrap: wrap; gap: 10px;">
@@ -104,30 +95,27 @@
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    <script>
-        const download = function () {
-            setTimeout(() => {
-                html2pdf()
-                    .set({
-                        filename: 'Resume.pdf',
-                        margin: [5, 10, 10, 10],
-                        image: { type: 'jpeg', quality: 0.98 },
-                        html2canvas: { scale: 3, logging: true, letterRendering: true },
-                        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-                    })
-                    .from(document.body)
-                    .save();
-            }, 1000);
-        };
-
-        if (confirm("Do you want to Download this Resume?") == true) {
-            download();
-        } else {
-            alert("Reload this page if you want to download it.");
-        }
-    </script>
-
+        <script>
+            const download = function () {
+                setTimeout(() => {
+                    html2pdf()
+                        .set({
+                            filename: 'Resume.pdf',
+                            margin: [5, 10, 10, 10],
+                            image: { type: 'jpeg', quality: 0.98 },
+                            html2canvas: { scale: 3, logging: true, letterRendering: true },
+                            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                        })
+                        .from(document.body)
+                        .save();
+                }, 1000);
+            };
+            if (confirm("Do you want to Download this Resume?") == true) {
+                download();
+            } else {
+                alert("Reload this page if you want to download it.");
+            }
+        </script>
     </form>
-
 </body>
 </html>
