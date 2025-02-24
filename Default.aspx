@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/Header.master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="ATS_friendly_Resume_Maker.HomePage" %>
+<%@ Page Language="C#" MasterPageFile="~/Header.master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="ATS_friendly_Resume_Maker.HomePage" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <!-- Page-specific head content -->
@@ -89,8 +89,8 @@
                             <div class="col-md-6" data-aos="fade-up" data-aos-delay="100">
                                 <div class="icon-box">
                                     <i class="bi bi-buildings"></i>
-                                    <h3>Eius provident</h3>
-                                    <p>Magni repellendus vel ullam hic officia accusantium ipsa dolor omnis dolor voluptatem</p>
+                                    <h3>Professional Resume Templates</h3>
+                                    <p>MChoose from a variety of modern, industry-specific resume templates designed to stand out.</p>
                                 </div>
                             </div>
                             <!-- End Icon Box -->
@@ -98,8 +98,8 @@
                             <div class="col-md-6" data-aos="fade-up" data-aos-delay="300">
                                 <div class="icon-box">
                                     <i class="bi bi-clipboard-pulse"></i>
-                                    <h3>Rerum aperiam</h3>
-                                    <p>Autem saepe animi et aut aspernatur culpa facere. Rerum saepe rerum voluptates quia</p>
+                                    <h3>Easy Customization/h3>
+                                    <p>Edit and personalize your resume with a user-friendly interface, allowing quick updates and adjustments.</p>
                                 </div>
                             </div>
                             <!-- End Icon Box -->
@@ -107,8 +107,8 @@
                             <div class="col-md-6" data-aos="fade-up" data-aos-delay="400">
                                 <div class="icon-box">
                                     <i class="bi bi-command"></i>
-                                    <h3>Veniam omnis</h3>
-                                    <p>Omnis perferendis molestias culpa sed. Recusandae quas possimus. Quod consequatur corrupti</p>
+                                    <h3>One-Click Export & Sharing</h3>
+                                    <p>Download your resume in PDF share it directly with recruiters via email or LinkedIn.</p>
                                 </div>
                             </div>
                             <!-- End Icon Box -->
@@ -116,8 +116,9 @@
                             <div class="col-md-6" data-aos="fade-up" data-aos-delay="500">
                                 <div class="icon-box">
                                     <i class="bi bi-graph-up-arrow"></i>
-                                    <h3>Delares sapiente</h3>
-                                    <p>Sint et dolor voluptas minus possimus nostrum. Reiciendis commodi eligendi omnis quideme lorenda</p>
+                                    <h3>Job-Specific Resume Suggestions
+</h3>
+                                    <p>Get tailored resume recommendations based on your target job role and industry trends.</p>
                                 </div>
                             </div>
                             <!-- End Icon Box -->
@@ -145,7 +146,8 @@
                     <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="100">
                         <div class="features-item">
                             <i class="bi bi-eye" style="color: #ffbb2c;"></i>
-                            <h3><a href="" class="stretched-link">Lorem Ipsum</a></h3>
+                            <h3><a href="" class="stretched-link">Resume Preview
+</a></h3>
                         </div>
                     </div>
                     <!-- End Feature Item -->
@@ -153,7 +155,7 @@
                     <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="200">
                         <div class="features-item">
                             <i class="bi bi-infinity" style="color: #5578ff;"></i>
-                            <h3><a href="" class="stretched-link">Dolor Sitema</a></h3>
+                            <h3><a href="" class="stretched-link">Unlimited Edits</a></h3>
                         </div>
                     </div>
                     <!-- End Feature Item -->
@@ -161,7 +163,7 @@
                     <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="300">
                         <div class="features-item">
                             <i class="bi bi-mortarboard" style="color: #e80368;"></i>
-                            <h3><a href="" class="stretched-link">Sed perspiciatis</a></h3>
+                            <h3><a href="" class="stretched-link">Smart Formatting</a></h3>
                         </div>
                     </div>
                     <!-- End Feature Item -->
@@ -169,7 +171,7 @@
                     <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="400">
                         <div class="features-item">
                             <i class="bi bi-nut" style="color: #e361ff;"></i>
-                            <h3><a href="" class="stretched-link">Magni Dolores</a></h3>
+                            <h3><a href="" class="stretched-link"> Customizable Sections</a></h3>
                         </div>
                     </div>
                     <!-- End Feature Item -->
@@ -177,7 +179,7 @@
                     <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="500">
                         <div class="features-item">
                             <i class="bi bi-shuffle" style="color: #47aeff;"></i>
-                            <h3><a href="" class="stretched-link">Nemo Enim</a></h3>
+                            <h3><a href="" class="stretched-link"> ATS-Friendly Resumes</a></h3>
                         </div>
                     </div>
                     <!-- End Feature Item -->
@@ -185,7 +187,7 @@
                     <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="600">
                         <div class="features-item">
                             <i class="bi bi-star" style="color: #ffa76e;"></i>
-                            <h3><a href="" class="stretched-link">Eiusmod Tempor</a></h3>
+                            <h3><a href="" class="stretched-link">One-Click Cover Letter</a></h3>
                         </div>
                     </div>
                     <!-- End Feature Item -->
@@ -193,7 +195,7 @@
                     <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="700">
                         <div class="features-item">
                             <i class="bi bi-x-diamond" style="color: #11dbcf;"></i>
-                            <h3><a href="" class="stretched-link">Midela Teren</a></h3>
+                            <h3><a href="" class="stretched-link">Secure Cloud Storage</a></h3>
                         </div>
                     </div>
                     <!-- End Feature Item -->
@@ -201,7 +203,7 @@
                     <div class="col-lg-3 col-md-4" data-aos="fade-up" data-aos-delay="800">
                         <div class="features-item">
                             <i class="bi bi-camera-video" style="color: #4233ff;"></i>
-                            <h3><a href="" class="stretched-link">Pira Neve</a></h3>
+                            <h3><a href="" class="stretched-link">Resume Templates for Every Industry</a></h3>
                         </div>
                     </div>
                     <!-- End Feature Item -->
@@ -228,15 +230,17 @@
                         <img src="assets/img/details-1.png" class="img-fluid" alt="">
                     </div>
                     <div class="col-md-7" data-aos="fade-up" data-aos-delay="100">
-                        <h3>Voluptatem dignissimos provident quasi corporis voluptates sit assumenda.</h3>
+                        <h3>Smart Resume Builder.</h3>
                         <p class="fst-italic">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-      magna aliqua.
+                            Our resume builder helps you create professional resumes effortlessly. Choose from various templates and customize them to fit your style.
+
+
+
                         </p>
                         <ul>
-                            <li><i class="bi bi-check"></i><span>Ullamco laboris nisi ut aliquip ex ea commodo consequat.</span></li>
-                            <li><i class="bi bi-check"></i><span>Duis aute irure dolor in reprehenderit in voluptate velit.</span></li>
-                            <li><i class="bi bi-check"></i><span>Ullam est qui quos consequatur eos accusamus.</span></li>
+                            <li><i class="bi bi-check"></i><span>Tailored industry-specific templates</span></li>
+                            <li><i class="bi bi-check"></i><span>Easy-to-use</span></li>
+                         
                         </ul>
                     </div>
                 </div>
@@ -247,15 +251,15 @@
                         <img src="assets/img/details-2.png" class="img-fluid" alt="">
                     </div>
                     <div class="col-md-7 order-2 order-md-1" data-aos="fade-up" data-aos-delay="200">
-                        <h3>Corporis temporibus maiores provident</h3>
+                        <h3> ATS-Friendly Resumes</h3>
                         <p class="fst-italic">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-      magna aliqua.
+                           ATS-approved templates
                         </p>
                         <p>
-                            Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-      velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-      culpa qui officia deserunt mollit anim id est laborum
+                          
+ Ensure your resume passes through Applicant Tracking Systems (ATS) with optimized formatting and keyword integration.
+✅ Keyword optimization
+✅ Increased job application success
                         </p>
                     </div>
                 </div>
@@ -285,10 +289,9 @@
                                 <h4>Vinay Tilada</h4>
                                 <span style="font-size: 1rem;">Backend & Delpoyment</span>
                                 <div class="social">
-                                    <a href=""><i class="bi bi-twitter-x"></i></a>
-                                    <a href=""><i class="bi bi-facebook"></i></a>
-                                    <a href=""><i class="bi bi-instagram"></i></a>
-                                    <a href=""><i class="bi bi-linkedin"></i></a>
+                                  
+                                   
+                                    <a href="https://www.linkedin.com/in/vinaytilada/"><i class="bi bi-linkedin"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -303,10 +306,8 @@
                                 <h4>Vansh Jain</h4>
                                 <span style="font-size: 1rem;">Full Stack Developer</span>
                                 <div class="social">
-                                    <a href=""><i class="bi bi-twitter-x"></i></a>
-                                    <a href=""><i class="bi bi-facebook"></i></a>
-                                    <a href=""><i class="bi bi-instagram"></i></a>
-                                    <a href=""><i class="bi bi-linkedin"></i></a>
+                               
+                                    <a href="https://www.linkedin.com/in/codewithvansh-jain/"><i class="bi bi-linkedin"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -340,7 +341,7 @@
                         <div style="flex: 1; text-align: center;">
                             <ul style="list-style-type: none; margin: 0; padding: 0; display: flex; justify-content: center;">
                                 <li style="margin-right: 2rem;">
-                                    <a href="#!" style="color: #9f15c9; text-decoration: none;">
+                                    <a href="https://github.com/MightyAcE58/ATS-friendly-Resume-Maker" style="color: #9f15c9; text-decoration: none;">
                                         <!-- GitHub Icon -->
                                         <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-github" viewBox="0 0 24 24">
                                             <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
@@ -384,7 +385,7 @@
     <script src="assets/vendor/aos/aos.js"></script>
     <script src="assets/js/main.js"></script>
 
-    <script>
+    /*<script>
         document.addEventListener("DOMContentLoaded", function () {
             const faqItems = document.querySelectorAll(".faq-item");
 
@@ -409,5 +410,5 @@
                 });
             });
         });
-    </script>
+    </script>*/
 </asp:Content>
