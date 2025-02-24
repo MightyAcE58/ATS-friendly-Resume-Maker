@@ -11,7 +11,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        /* Global Styles */
         body {
             background: linear-gradient(135deg, #121212, #1e1e2f);
             color: #f0f0f0;
@@ -24,7 +23,7 @@
             height: 100vh;
         }
 
-        /* Card Styling - Glassmorphism Effect */
+
         .card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
@@ -40,7 +39,7 @@
                 box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
             }
 
-        /* Iframe Container */
+
         .iframe-container {
             height: 600px;
             border-radius: 15px;
@@ -55,7 +54,7 @@
                 background: white !important;
             }
 
-        /* Modern Button Style */
+
         .btn-custom {
             background: linear-gradient(90deg, #9a60e6, #854dd8);
             border: none;
@@ -75,7 +74,7 @@
                 box-shadow: 0 6px 15px rgba(154, 96, 230, 0.5);
             }
 
-        /* Floating Animation for Cards */
+
         @keyframes floating {
             0% {
                 transform: translateY(0px);

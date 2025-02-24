@@ -24,7 +24,7 @@ namespace ATS_friendly_Resume_Maker
                 Response.Redirect("Default.aspx");
             }
 
-            
+
         }
 
         protected void btnRegister_Click(object sender, EventArgs e)
@@ -42,13 +42,13 @@ namespace ATS_friendly_Resume_Maker
 
                     if (count > 0)
                     {
-                        // Email already exists, show an error message
+
                         ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Email already exists! Please use a different email.');", true);
                         return;
                     }
                 }
 
-                // Proceed with insertion if email does not exist
+
                 string query = "INSERT INTO Users (firstName, lastName, email, password) VALUES (@FirstName, @LastName, @Email, @Password)";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
