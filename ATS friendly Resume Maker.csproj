@@ -180,8 +180,6 @@
     <Content Include="assets\vendor\aos\aos.css" />
     <Content Include="assets\vendor\aos\aos.esm.js" />
     <Content Include="assets\vendor\aos\aos.js" />
-    <Content Include="assets\vendor\bootstrap-icons\bootstrap-icons.css" />
-    <Content Include="assets\vendor\bootstrap-icons\bootstrap-icons.min.css" />
     <Content Include="assets\vendor\bootstrap\css\bootstrap-grid.css" />
     <Content Include="assets\vendor\bootstrap\css\bootstrap-grid.min.css" />
     <Content Include="assets\vendor\bootstrap\css\bootstrap-grid.rtl.css" />
@@ -289,10 +287,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\vendor\aos\aos.js.map" />
-    <Content Include="assets\vendor\bootstrap-icons\bootstrap-icons.json" />
-    <Content Include="assets\vendor\bootstrap-icons\bootstrap-icons.scss" />
-    <Content Include="assets\vendor\bootstrap-icons\fonts\bootstrap-icons.woff" />
-    <Content Include="assets\vendor\bootstrap-icons\fonts\bootstrap-icons.woff2" />
     <Content Include="assets\vendor\bootstrap\css\bootstrap-grid.css.map" />
     <Content Include="assets\vendor\bootstrap\css\bootstrap-grid.min.css.map" />
     <Content Include="assets\vendor\bootstrap\css\bootstrap-grid.rtl.css.map" />
