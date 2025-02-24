@@ -37,15 +37,15 @@ namespace ATS_friendly_Resume_Maker
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@Email", txtEmail.Text);
-                    cmd.Parameters.AddWithValue("@Password", HashPassword(txtPassword.Text)); // Ensure password hashing matches
+                    cmd.Parameters.AddWithValue("@Password", HashPassword(txtPassword.Text));
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        if (reader.Read()) // ✅ Ensures data is available
+                        if (reader.Read()) 
                         {
                             Session["UserId"] = reader["UserId"].ToString();
                             Session["UserEmail"] = txtEmail.Text;
-                            Session["UserFirstName"] = reader["FirstName"].ToString(); // ✅ Match exact column case
+                            Session["UserFirstName"] = reader["FirstName"].ToString(); 
                             Session["UserLastName"] = reader["LastName"].ToString();
 
                             Response.Redirect("Default.aspx");

@@ -10,7 +10,6 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <!-- Your header code here -->
         <header id="header" class="header d-flex align-items-center fixed-top">
             <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
                 <a href="/" class="logo d-flex align-items-center">
@@ -23,7 +22,7 @@
                         <li><a href="#features">Features</a></li>
                         <li><a href="#team">Team</a></li>
 
-                        <!-- Dropdown for User -->
+
                         <li class="dropdown" id="userDropdown" runat="server" visible="false">
                             <a href="#" class="dropdown-toggle">
                                 <asp:Label ID="lblWelcome" runat="server"></asp:Label>
@@ -47,29 +46,26 @@
             </div>
         </header>
 
-        <!-- Content placeholder -->
         <asp:ContentPlaceHolder ID="MainContent" runat="server">
         </asp:ContentPlaceHolder>
     </form>
 </body>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Cache the navigation links and sections
         const navLinks = document.querySelectorAll("#navmenu ul li a");
         const sections = document.querySelectorAll("section");
 
-        // Function to update active class based on the clicked item
+
         navLinks.forEach((link) => {
             link.addEventListener("click", function (e) {
-                e.preventDefault(); // Prevent default behavior (scrolling to section directly)
+                e.preventDefault();
 
-                // Remove active class from all links
+
                 navLinks.forEach((item) => item.classList.remove("active"));
 
-                // Add active class to the clicked link
+
                 this.classList.add("active");
 
-                // Scroll to the corresponding section with smooth scrolling
                 const targetSection = document.querySelector(this.getAttribute("href"));
                 targetSection.scrollIntoView({
                     behavior: "smooth",
@@ -78,23 +74,23 @@
             });
         });
 
-        // Function to update active class based on the scroll position
+
         const updateActiveClassOnScroll = () => {
             let currentSectionId = "";
 
-            // Loop through sections to determine which one is currently in view
+
             sections.forEach((section) => {
                 const sectionTop = section.offsetTop;
                 const sectionHeight = section.offsetHeight;
                 const sectionBottom = sectionTop + sectionHeight;
 
-                // Adjust the trigger point for active class based on scroll position
+
                 if (window.scrollY >= sectionTop - window.innerHeight / 3 && window.scrollY < sectionBottom - window.innerHeight / 3) {
                     currentSectionId = section.getAttribute("id");
                 }
             });
 
-            // Loop through navigation links and highlight the one matching the current section
+
             navLinks.forEach((link) => {
                 link.classList.remove("active");
                 if (link.getAttribute("href") === "#" + currentSectionId) {
@@ -103,20 +99,18 @@
             });
         };
 
-        // Throttle the scroll event to improve performance
+
         let isScrolling = false;
         window.addEventListener("scroll", () => {
             if (!isScrolling) {
                 isScrolling = true;
-                // Use setTimeout to debounce the scroll event
+
                 setTimeout(() => {
                     updateActiveClassOnScroll();
                     isScrolling = false;
-                }, 100); // Adjust the debounce delay as necessary
+                }, 100);
             }
         });
-
-        // Initialize the active class based on the current scroll position on page load
         updateActiveClassOnScroll();
     });
 </script>

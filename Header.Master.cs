@@ -24,7 +24,7 @@ namespace ATS_friendly_Resume_Maker
                 else
                 {
                     lblWelcome.Text = "";
-                    loginItem.Visible = true; // Show login if user is not logged in
+                    loginItem.Visible = true;
                     userDropdown.Visible = false; // Hide the welcome dropdown
                 }
             }

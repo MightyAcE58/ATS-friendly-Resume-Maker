@@ -14,16 +14,14 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
     <style>
-        /* Global Box Sizing */
         *, *::before, *::after {
             box-sizing: border-box;
         }
 
-        /* Global Styles */
+
         body {
             background-color: #000000;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 800 400'%3E%3Cdefs%3E%3CradialGradient id='a' cx='396' cy='281' r='514' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%239A60E6'/%3E%3Cstop offset='1' stop-color='%23000000'/%3E%3C/radialGradient%3E%3ClinearGradient id='b' gradientUnits='userSpaceOnUse' x1='400' y1='148' x2='400' y2='333'%3E%3Cstop offset='0' stop-color='%23D1D0FF' stop-opacity='0'/%3E%3Cstop offset='1' stop-color='%23D1D0FF' stop-opacity='0.5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23a)' width='800' height='400'/%3E%3Cg fill-opacity='0.4'%3E%3Ccircle fill='url(%23b)' cx='267.5' cy='61' r='300'/%3E%3Ccircle fill='url(%23b)' cx='532.5' cy='61' r='300'/%3E%3Ccircle fill='url(%23b)' cx='400' cy='30' r='300'/%3E%3C/g%3E%3C/svg%3E");
-            /* For mobile devices, fixed background can be taxing so override if needed */
             background-attachment: fixed;
             background-size: cover;
             background-position: center;
@@ -129,7 +127,7 @@
                 box-shadow: 0 4px 12px rgba(154, 96, 230, 0.3);
             }
 
-        /* Icon-Only Remove Button (Using Provided SVG Icon) */
+
         .btn-remove {
             position: absolute !important;
             top: 12px !important;
@@ -192,7 +190,6 @@
         @media (max-width: 768px) {
             body {
                 padding: 10px;
-                /* On some mobile browsers, fixed backgrounds can be problematic */
                 background-attachment: scroll;
             }
 

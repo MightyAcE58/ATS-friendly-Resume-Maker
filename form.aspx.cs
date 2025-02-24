@@ -151,14 +151,14 @@ namespace ATS_friendly_Resume_Maker
             {
                 conn.Open();
 
-                // Retrieve User Details
+
                 string getUserQuery = "SELECT FullName, Email, PhoneNumber, Summary, Country FROM UserDetail WHERE UserId = @UserId";
                 using (SqlCommand cmd = new SqlCommand(getUserQuery, conn))
                 {
                     cmd.Parameters.AddWithValue("@UserId", userId);
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    if (reader.Read()) // If data exists
+                    if (reader.Read())
                     {
                         txtFullName.Text = reader["FullName"].ToString();
                         txtEmail.Text = reader["Email"].ToString();
@@ -169,14 +169,14 @@ namespace ATS_friendly_Resume_Maker
                     reader.Close();
                 }
 
-                // Retrieve Skills
+
                 string getSkillsQuery = "SELECT SkillsText FROM Skills WHERE UserID = @UserId";
                 using (SqlCommand cmd = new SqlCommand(getSkillsQuery, conn))
                 {
                     cmd.Parameters.AddWithValue("@UserId", userId);
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    if (reader.Read()) // If data exists
+                    if (reader.Read())
                     {
                         txtskill.Text = reader["SkillsText"].ToString();
                     }
@@ -202,7 +202,7 @@ namespace ATS_friendly_Resume_Maker
                         {
                             EmploymentEntries.Add(new EmploymentData()
                             {
-                                ExperienceID = Convert.ToInt32(reader["ExperienceID"]), // Assign ExperienceID
+                                ExperienceID = Convert.ToInt32(reader["ExperienceID"]),
                                 Company = reader["CompanyName"]?.ToString(),
                                 Title = reader["JobTitle"]?.ToString(),
                                 EmploymentType = reader["EmploymentType"]?.ToString(),
@@ -218,7 +218,6 @@ namespace ATS_friendly_Resume_Maker
                 }
             }
         }
-
 
         private void LoadEducationData(int userId)
         {
@@ -282,14 +281,14 @@ namespace ATS_friendly_Resume_Maker
 
         private void InitializeYearDropdowns()
         {
-            // Populate year dropdown lists for the first time
+
             int currentYear = DateTime.Now.Year;
             List<int> years = Enumerable.Range(currentYear - 50, 51).Reverse().ToList();
 
-            // No need to populate here as it will be done in ItemDataBound events
+
         }
 
-        #region Employment Methods
+
         protected void btnAddEmployment_Click(object sender, EventArgs e)
         {
             SaveEmploymentValues();
@@ -302,14 +301,14 @@ namespace ATS_friendly_Resume_Maker
 
             if (e.CommandName == "Remove")
             {
-                SaveEmploymentValues(); // Ensure values are saved before deletion
+                SaveEmploymentValues();
 
                 int index = Convert.ToInt32(e.CommandArgument);
                 if (index >= 0 && index < EmploymentEntries.Count)
                 {
                     int experienceId = EmploymentEntries[index].ExperienceID; // Get the ExperienceID
 
-                    if (experienceId > 0) // Only delete if it exists in the database
+                    if (experienceId > 0)
                     {
                         using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString))
                         {
@@ -325,7 +324,7 @@ namespace ATS_friendly_Resume_Maker
                     }
 
                     EmploymentEntries.RemoveAt(index); // Remove from the list
-                    BindEmploymentRepeater(); // Refresh UI
+                    BindEmploymentRepeater();
                 }
             }
         }
@@ -345,10 +344,10 @@ namespace ATS_friendly_Resume_Maker
                     ddlEndYear.Items.Add(new ListItem(year.ToString(), year.ToString()));
                 }
 
-                // Add "Present" option to end year
+
                 ddlEndYear.Items.Add(new ListItem("Present", "0"));
 
-                // Set selected values if data exists
+
                 EmploymentData entry = (EmploymentData)e.Item.DataItem;
                 if (entry != null)
                 {
@@ -378,7 +377,7 @@ namespace ATS_friendly_Resume_Maker
                     {
                         ddlEndYear.SelectedValue = entry.EndYear.ToString();
                     }
-                    else if (entry.EndYear == 0) // "Present"
+                    else if (entry.EndYear == 0)
                     {
                         ddlEndYear.SelectedValue = "0";
                     }
@@ -428,9 +427,9 @@ namespace ATS_friendly_Resume_Maker
             rptEmployment.DataSource = EmploymentEntries;
             rptEmployment.DataBind();
         }
-        #endregion
 
-        #region Education Methods
+
+
         protected void btnAddEducation_Click(object sender, EventArgs e)
         {
             SaveEducationValues();
@@ -442,14 +441,14 @@ namespace ATS_friendly_Resume_Maker
         {
             if (e.CommandName == "Remove")
             {
-                SaveEducationValues(); // Save current education values before removing
+                SaveEducationValues(); 
 
                 int index = Convert.ToInt32(e.CommandArgument);
                 if (index >= 0 && index < EducationEntries.Count)
                 {
                     int educationId = EducationEntries[index].EducationID; // Get EducationID
 
-                    if (educationId > 0) // Delete only if it exists in the database
+                    if (educationId > 0)
                     {
                         using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString))
                         {
@@ -486,10 +485,10 @@ namespace ATS_friendly_Resume_Maker
                     ddlEndYear.Items.Add(new ListItem(year.ToString(), year.ToString()));
                 }
 
-                // Add "Present" option to end year
+
                 ddlEndYear.Items.Add(new ListItem("Present", "0"));
 
-                // Set selected values if data exists
+
                 EducationData entry = (EducationData)e.Item.DataItem;
                 if (entry != null)
                 {
@@ -508,7 +507,7 @@ namespace ATS_friendly_Resume_Maker
                     {
                         ddlEndYear.SelectedValue = entry.EndYear.ToString();
                     }
-                    else if (entry.EndYear == 0) // "Present"
+                    else if (entry.EndYear == 0)
                     {
                         ddlEndYear.SelectedValue = "0";
                     }
@@ -548,9 +547,7 @@ namespace ATS_friendly_Resume_Maker
             rptEducation.DataSource = EducationEntries;
             rptEducation.DataBind();
         }
-        #endregion
-
-        #region Links Methods
+        // Vansh and Vinay
         protected void btnAddWebsite_Click(object sender, EventArgs e)
         {
             SaveLinkValues();
@@ -562,14 +559,14 @@ namespace ATS_friendly_Resume_Maker
         {
             if (e.CommandName == "Remove")
             {
-                SaveLinkValues(); // Ensure current values are saved
+                SaveLinkValues();
 
                 int index = Convert.ToInt32(e.CommandArgument);
                 if (index >= 0 && index < LinkEntries.Count)
                 {
-                    int linkId = LinkEntries[index].LinkID; // Get LinkID
+                    int linkId = LinkEntries[index].LinkID;
 
-                    if (linkId > 0) // Delete only if it exists in the database
+                    if (linkId > 0)
                     {
                         using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString))
                         {
@@ -614,8 +611,8 @@ namespace ATS_friendly_Resume_Maker
             rptLinks.DataSource = LinkEntries;
             rptLinks.DataBind();
         }
-        #endregion
 
+        // Vansh and Vinay
         protected void rptLinks_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
@@ -664,14 +661,14 @@ namespace ATS_friendly_Resume_Maker
 
 
 
-                foreach (var entry in EmploymentEntries.Where(entry => entry.ExperienceID == 0)) // Use 'entry' instead of 'e'
+                foreach (var entry in EmploymentEntries.Where(entry => entry.ExperienceID == 0))
                 {
 
                     if (string.IsNullOrEmpty(entry.Company) || string.IsNullOrEmpty(entry.Title))
                     {
                         string script = "alert('Company Name and Job Title are required fields.');";
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "ValidationAlert", script, true);
-                        return; // Stop execution to prevent inserting invalid data
+                        return;
                     }
 
                     string insertQuery = @"INSERT INTO Experience 
@@ -691,7 +688,7 @@ namespace ATS_friendly_Resume_Maker
                         cmd.Parameters.AddWithValue("@Location", string.IsNullOrEmpty(entry.Location) ? (object)DBNull.Value : entry.Location);
                         cmd.Parameters.AddWithValue("@Description", string.IsNullOrEmpty(entry.Description) ? (object)DBNull.Value : entry.Description);
 
-                        entry.ExperienceID = (int)cmd.ExecuteScalar(); // Get the new ExperienceID
+                        entry.ExperienceID = (int)cmd.ExecuteScalar();
                     }
                 }
 
@@ -703,10 +700,10 @@ namespace ATS_friendly_Resume_Maker
                     {
                         string script = "alert('School Name and Degree are required fields.');";
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "ValidationAlert", script, true);
-                        return; // Stop execution to prevent inserting invalid data
+                        return;
                     }
 
-                    // SQL query to insert new record and return the generated EducationID
+
                     string insertQuery = @"
         INSERT INTO Education 
         (UserId, SchoolName, Degree, StartYear, EndYear, City, Description) 
@@ -715,7 +712,7 @@ namespace ATS_friendly_Resume_Maker
 
                     using (SqlCommand cmd = new SqlCommand(insertQuery, con))
                     {
-                        // Add parameters
+
                         cmd.Parameters.AddWithValue("@UserId", userId);
                         cmd.Parameters.AddWithValue("@SchoolName", edu.School ?? (object)DBNull.Value);
                         cmd.Parameters.AddWithValue("@Degree", edu.Degree ?? (object)DBNull.Value);
@@ -724,18 +721,18 @@ namespace ATS_friendly_Resume_Maker
                         cmd.Parameters.AddWithValue("@City", string.IsNullOrEmpty(edu.City) ? (object)DBNull.Value : edu.City);
                         cmd.Parameters.AddWithValue("@Description", string.IsNullOrEmpty(edu.Description) ? (object)DBNull.Value : edu.Description);
 
-                        // Retrieve the newly inserted EducationID and assign it to the object
+
                         edu.EducationID = (int)cmd.ExecuteScalar();
                     }
                 }
 
-
-                foreach (var link in LinkEntries.Where(l => l.LinkID == 0)) // Only insert new records
+                // Vansh and Vinay
+                foreach (var link in LinkEntries.Where(l => l.LinkID == 0))
                 {
 
                     if (string.IsNullOrWhiteSpace(link.Label) || string.IsNullOrWhiteSpace(link.Url))
                     {
-                        // Skip or handle invalid entries
+
                         continue;
                     }
 
@@ -746,24 +743,24 @@ namespace ATS_friendly_Resume_Maker
                         cmd.Parameters.AddWithValue("@Label", link.Label);
                         cmd.Parameters.AddWithValue("@Url", link.Url);
 
-                        // Retrieve the newly inserted LinkID and update the object
+
                         link.LinkID = (int)cmd.ExecuteScalar();
                     }
                 }
 
             }
 
-            // Validate required fields
+
             if (string.IsNullOrWhiteSpace(txtFullName.Text) ||
                 string.IsNullOrWhiteSpace(txtEmail.Text) ||
                 string.IsNullOrWhiteSpace(txtPhone.Text) ||
                 string.IsNullOrWhiteSpace(txtCountry.Text))
             {
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Please fill in all required fields!');", true);
-                return; // Stop further execution
+                return;
             }
 
-            // Trim values and handle nulls
+
             string fullName = txtFullName.Text.Trim();
             string email = txtEmail.Text.Trim();
             string phone = txtPhone.Text.Trim();
@@ -771,6 +768,8 @@ namespace ATS_friendly_Resume_Maker
             string country = txtCountry.Text.Trim();
             string skills = string.IsNullOrWhiteSpace(txtskill.Text) ? DBNull.Value.ToString() : txtskill.Text.Trim();
 
+
+            // Vansh and Vinay
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString))
             {
                 conn.Open();

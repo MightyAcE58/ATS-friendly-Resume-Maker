@@ -84,11 +84,7 @@
             <a href="Register.aspx" class="fw-bold text-primary text-decoration-none">Create an account</a>
             </p>
         </div>
-
-
     </form>
-
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
