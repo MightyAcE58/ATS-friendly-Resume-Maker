@@ -3,6 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <!-- Page-specific head content -->
     <meta name="description" content="">
+    <meta charset="UTF-8">
     <meta name="keywords" content="">
 
     <!-- Favicons -->
@@ -90,7 +91,7 @@
                                 <div class="icon-box">
                                     <i class="bi bi-buildings"></i>
                                     <h3>Professional Resume Templates</h3>
-                                    <p>MChoose from a variety of modern, industry-specific resume templates designed to stand out.</p>
+                                    <p>Choose from a variety of modern, industry-specific resume templates designed to stand out.</p>
                                 </div>
                             </div>
                             <!-- End Icon Box -->
@@ -98,7 +99,7 @@
                             <div class="col-md-6" data-aos="fade-up" data-aos-delay="300">
                                 <div class="icon-box">
                                     <i class="bi bi-clipboard-pulse"></i>
-                                    <h3>Easy Customization/h3>
+                                    <h3>Easy Customization</h3>
                                     <p>Edit and personalize your resume with a user-friendly interface, allowing quick updates and adjustments.</p>
                                 </div>
                             </div>
@@ -258,9 +259,14 @@
                         <p>
                           
  Ensure your resume passes through Applicant Tracking Systems (ATS) with optimized formatting and keyword integration.
-✅ Keyword optimization
-✅ Increased job application success
+ 
+
                         </p>
+   <ul>
+                            <li><i class="bi bi-check"></i><span>Keyword optimization</span></li>
+                            <li><i class="bi bi-check"></i><span> Increased job application success</span></li>
+                         
+                        </ul>
                     </div>
                 </div>
                 <!-- Features Item -->
