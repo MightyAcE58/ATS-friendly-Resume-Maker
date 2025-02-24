@@ -278,7 +278,7 @@
                     <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
                         <div class="member">
                             <div class="pic">
-                                <img src="assets/img/team/team-1.jpg" class="img-fluid" alt="">
+                                <img src="assets/img/team/vinay.jpeg" class="img-fluid" alt="">
                             </div>
                             <div class="member-info" style="background-color: rgba(128, 128, 128, 0.329);">
                                 <h4>Vinay Tilada</h4>
@@ -296,7 +296,7 @@
                     <div class="col-lg-4 col-md-6 " data-aos="fade-up" data-aos-delay="200">
                         <div class="member">
                             <div class="pic">
-                                <img src="assets/img/team/team-2.jpg" class="img-fluid" alt="">
+                                <img src="assets/img/team/vansh.jpg" class="img-fluid" alt="">
                             </div>
                             <div class="member-info" style="background-color: rgba(128, 128, 128, 0.329);">
                                 <h4>Vansh Jain</h4>

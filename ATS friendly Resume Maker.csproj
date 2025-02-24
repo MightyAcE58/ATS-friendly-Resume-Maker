@@ -172,8 +172,8 @@
     <Content Include="assets\img\hero-img.png" />
     <Content Include="assets\img\logo-nobg.png" />
     <Content Include="assets\img\logo.png" />
-    <Content Include="assets\img\team\team-1.jpeg" />
-    <Content Include="assets\img\team\team-2.jpg" />
+    <Content Include="assets\img\team\vinay.jpeg" />
+    <Content Include="assets\img\team\vansh.jpg" />
     <Content Include="assets\js\main.js" />
     <Content Include="assets\js\script.js" />
     <Content Include="assets\vendor\aos\aos.cjs.js" />
