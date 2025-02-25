@@ -12,16 +12,11 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
             color: #333;
         }
 
         .container {
-            margin: 2rem;
-            margin-left: 3rem;
-            margin-right: 3rem;
-            padding: 10px;
+
         }
 
         .name {
@@ -189,25 +184,26 @@
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-<script>
-    const download = function () {
-        setTimeout(() => {
-            html2pdf()
-                .set({
-                    filename: 'Resume.pdf',
-                    jsPDF: { format: 'a4', orientation: 'portrait', unit: 'mm', margin: [10, 10, 10, 10] },
-                    html2canvas: { scale: 3, logging: true }, // Ensures better quality
-                    pagebreak: { mode: ['avoid-all', 'css'] } // Prevents unwanted breaks
-                })
-                .from(document.body) // Targets only the resume content
-                .save();
-        }, 1000);
-    };
+   <script>
+       const download = function () {
+           setTimeout(() => {
+               html2pdf()
+                   .set({
+                       filename: 'Resume.pdf',
+                       margin: [10, 10, 10, 10],
+                       image: { type: 'jpeg', quality: 0.98 },
+                       html2canvas: { scale: 3, logging: true, letterRendering: true },
+                       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                   })
+                   .from(document.body)
+                   .save();
+           }, 1000);
+       };
 
-    if (confirm("Do you want to Download this Resume?") == 1) {
-        download();
-    } else {
-        alert("Reload this page if you want to download it.")
-    }
-</script>
+       if (confirm("Do you want to Download this Resume?") == true) {
+           download();
+       } else {
+           alert("Reload this page if you want to download it.");
+       }
+   </script>
 </html>
