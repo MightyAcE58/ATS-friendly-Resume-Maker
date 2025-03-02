@@ -293,7 +293,7 @@
                             </div>
                             <div class="member-info" style="background-color: rgba(128, 128, 128, 0.329);">
                                 <h4>Vinay Tilada</h4>
-                                <span style="font-size: 1rem;">Backend & Delpoyment</span>
+                                <span style="font-size: 1rem;">Backend & Deployment</span>
                                 <div class="social">
                                   
                                    
